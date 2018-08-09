@@ -15,6 +15,17 @@ defmodule BibTex.Parser do
   defparsec(:comma, comma, debug: true)
 
   #
+  # Quote: Parses and "eats" a quote.
+  #
+
+  quot =
+    ascii_char([?"])
+    |> optional()
+    |> ignore()
+
+  defparsec(:quot, quot, debug: true)
+
+  #
   # Whitespace: Parses and "eats" all the whitespace in front of the input.
   #
 
@@ -50,11 +61,14 @@ defmodule BibTex.Parser do
   tag =
     whitespaces
     |> ignore()
+    |> concat(comma)
     |> concat(symbol)
     |> repeat_until(
       symbol,
       [ascii_char([?=])]
     )
+    |> concat(whitespaces)
+    |> concat(comma)
     |> concat(whitespaces)
 
   defparsec(:tag, tag, debug: true)
@@ -116,11 +130,12 @@ defmodule BibTex.Parser do
       ascii_char([]),
       [ascii_char([?"])]
     )
-    |> ascii_char([?"])
+    |> concat(whitespaces)
+    |> concat(quot)
     |> concat(whitespaces)
     |> concat(comma)
+
     |> concat(whitespaces)
-    |> optional(tag_end)
 
   defparsec(:tag_content, tag_content, debug: true)
 
@@ -225,6 +240,7 @@ defmodule BibTex.Parser do
     else
       {:error, e, _} ->
         {:error, e, input}
+
       {:error, e, _, _, _, _} ->
         {:error, "parse_tag: #{e}", input}
     end
