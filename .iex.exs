@@ -1,10 +1,10 @@
-alias BibTex.Parser
+import BibTex.Parser
 
-example = """
+ex = """
 @misc{ Nobody06,
        author = "Nobody Jr",
        title = "My Article",
        year = "2006",
-      pages = "1--10" }
+      pages = "1--10", }
 """
 
