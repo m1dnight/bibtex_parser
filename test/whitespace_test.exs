@@ -1,4 +1,4 @@
-defmodule BibtexParserTest do
+defmodule BibTex.Test.Whitespace do
   use ExUnit.Case
   doctest BibtexParser
   alias BibTex.Parser
@@ -46,18 +46,5 @@ defmodule BibtexParserTest do
 
     assert result == []
     assert rest == "foo"
-  end
-
-  test "Test parsing of type" do
-    input = """
-    @book{ thomas2014programming , trash}
-    """
-
-    {:ok, result, rest, _, _, _} = Parser.type(input)
-    assert result == 'book'
-
-    {:ok, result, rest, _, _, _} = Parser.label(rest)
-    assert result == 'thomas2014programming'
-    assert true == match?(<<?,, _::binary>>, rest)
   end
 end

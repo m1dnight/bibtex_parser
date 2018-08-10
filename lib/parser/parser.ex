@@ -26,6 +26,17 @@ defmodule BibTex.Parser do
   defparsec(:quot, quot, debug: true)
 
   #
+  # RBrace: Parses and "eats" a right brace.
+  #
+
+  rbrace =
+    ascii_char([?}])
+    |> optional()
+    |> ignore()
+
+  defparsec(:rbrace, rbrace, debug: true)
+
+  #
   # Whitespace: Parses and "eats" all the whitespace in front of the input.
   #
 
@@ -42,13 +53,7 @@ defmodule BibTex.Parser do
   # Symbol: Parses a legit symbol (all unicode, no spaces, no newlines, ..)
   #
 
-  symbol =
-    whitespaces
-    |> utf8_char([])
-    |> concat(whitespaces)
-
-  # |> choice([ascii_char([?A..?Z]), ascii_char([?0..?9]), ascii_char([?a..?z])])
-  # |> concat(whitespace)
+  symbol = ascii_char([?A..?Z, ?a..?z, ?., ?0..?9, ?,])
 
   # ------------------------------------ Components ----------------------------#
 
@@ -80,46 +85,6 @@ defmodule BibTex.Parser do
   quoted_tag_content =
     whitespaces
     |> ignore()
-    |> ascii_char([?{])
-    |> ignore()
-    |> ascii_char([])
-    |> repeat_until(
-      ascii_char([]),
-      [ascii_char([?}])]
-    )
-    |> ascii_char([?}])
-    |> concat(whitespaces)
-    |> concat(comma)
-    |> concat(whitespaces)
-
-  braced_tag_content =
-    whitespaces
-    |> ignore()
-    |> ascii_char([?"])
-    |> ignore()
-    |> ascii_char([])
-    |> repeat_until(
-      ascii_char([]),
-      [ascii_char([?"])]
-    )
-    |> ascii_char([?"])
-    |> concat(whitespaces)
-    |> concat(comma)
-    |> concat(whitespaces)
-
-  tag_end =
-    whitespaces
-    |> concat(comma)
-    |> concat(whitespaces)
-    |> ascii_char([?}])
-    |> concat(whitespaces)
-    |> ignore()
-
-  defparsec(:tag_end, tag_end, debug: true)
-
-  tag_content =
-    whitespaces
-    |> ignore()
     |> ascii_char([?=])
     |> ignore()
     |> concat(whitespaces)
@@ -134,8 +99,30 @@ defmodule BibTex.Parser do
     |> concat(quot)
     |> concat(whitespaces)
     |> concat(comma)
-
     |> concat(whitespaces)
+
+  defparsec(:quoted_tag_content, quoted_tag_content, debug: true)
+
+  braced_tag_content =
+    whitespaces
+    |> ascii_char([?=])
+    |> concat(whitespaces)
+    |> ascii_char([?{])
+    |> ignore()
+    |> ascii_char([])
+    |> repeat_until(
+      ascii_char([]),
+      [ascii_char([?}])]
+    )
+    |> concat(whitespaces)
+    |> concat(rbrace)
+    |> concat(whitespaces)
+    |> concat(comma)
+    |> concat(whitespaces)
+
+  defparsec(:braced_tag_content, braced_tag_content, debug: true)
+
+  tag_content = choice([quoted_tag_content, braced_tag_content])
 
   defparsec(:tag_content, tag_content, debug: true)
 
@@ -171,6 +158,7 @@ defmodule BibTex.Parser do
       [ascii_char([?,]), ascii_char([?\s])]
     )
     |> concat(whitespaces)
+    |> concat(comma)
 
   defparsec(:label, ref_label, debug: true)
 
