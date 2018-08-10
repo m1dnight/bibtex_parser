@@ -1,6 +1,49 @@
-# BibtexParser
+# Bibtex Parser
 
-**TODO: Add description**
+A parser for BibTex files, implemented using NimbleParsec. Currently work in progress. Missing features are shown below.
+
+## Example
+
+```
+defmodule BibtexParser do
+  import BibTex.Parser
+
+  def example do
+    input = """
+    @techreport{agha1985actors,
+    title={Actors: A model of concurrent computation in distributed systems.},
+    author={Agha, Gul A},
+    year={1985},
+    institution={MASSACHUSETTS INST OF TECH CAMBRIDGE ARTIFICIAL INTELLIGENCE LAB}
+    }
+
+    """
+
+    result = parse_entry(input)
+
+    # => {:ok,
+    #  %{
+    #    label: 'agha1985actors',
+    #    tags: [
+    #      title: 'Actors: A model of concurrent computation in distributed systems.',
+    #      author: 'Agha, Gul A',
+    #      year: '1985',
+    #      institution: 'MASSACHUSETTS INST OF TECH CAMBRIDGE ARTIFICIAL INTELLIGENCE LAB'
+    #    ],
+    #    type: 'techreport'
+    #  }}
+  end
+end
+
+```
+
+## Missing features
+
+ - Can not parse full BibTex files. 
+   - No support for `@STRING`, `@PREAMBLE`, or `@COMMENT`.
+ - String concatenation (e.g., `author = "Jose" # "Valim"`) not supported yet.
+ - Documentation
+
 
 ## Installation
 

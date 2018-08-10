@@ -1,18 +1,29 @@
 defmodule BibtexParser do
-  @moduledoc """
-  Documentation for BibtexParser.
-  """
+  import BibTex.Parser
 
-  @doc """
-  Hello world.
+  def example do
+    input = """
+    @techreport{agha1985actors,
+    title={Actors: A model of concurrent computation in distributed systems.},
+    author={Agha, Gul A},
+    year={1985},
+    institution={MASSACHUSETTS INST OF TECH CAMBRIDGE ARTIFICIAL INTELLIGENCE LAB}
+    }
 
-  ## Examples
+    """
 
-      iex> BibtexParser.hello
-      :world
+    result = parse_entry(input)
 
-  """
-  def hello do
-    :world
+    # => {:ok,
+    #  %{
+    #    label: 'agha1985actors',
+    #    tags: [
+    #      title: 'Actors: A model of concurrent computation in distributed systems.',
+    #      author: 'Agha, Gul A',
+    #      year: '1985',
+    #      institution: 'MASSACHUSETTS INST OF TECH CAMBRIDGE ARTIFICIAL INTELLIGENCE LAB'
+    #    ],
+    #    type: 'techreport'
+    #  }}
   end
 end
