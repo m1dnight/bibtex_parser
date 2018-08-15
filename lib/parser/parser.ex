@@ -166,6 +166,8 @@ defmodule BibTex.Parser do
   # Helpers: Higher-level parser functions.
   #
 
+  defparsec(:typelabel, type |> concat(ref_label), debug: true)
+
   def parse_entry(input) do
     with {:ok, type, rest} <- parse_type(input),
          {:ok, label, rest} <- parse_label(rest),
@@ -261,43 +263,4 @@ defmodule BibTex.Parser do
         {:error, "parse_tag_content: #{e}", input}
     end
   end
-
-  # def parse_entry(input) do
-  #   {:ok, type, rest, _, _, _} = type(input)
-  #   {:ok, label, <<?,, rest::binary>>, _, _, _} = label(rest)
-
-  #   IO.inspect(rest)
-
-  #   fields = parse_fields(rest)
-
-  #   %{:type => type, :label => label, :fields => fields}
-  # end
-
-  # def parse_fields(input) do
-  #   case parse_field(input) do
-  #     {nil, rest} ->
-  #       []
-
-  #     {field, arg, rest} ->
-  #       [{String.to_atom(to_string(field)), arg}] ++ parse_fields(rest)
-  #   end
-  # end
-
-  # def parse_field(input) do
-  #   case field(input) do
-  #     {:ok, field, <<?=, arg::binary>>, _, _, _} ->
-  #       # Logger.debug("Parsed field: #{inspect(field)} (#{inspect(arg)})")
-
-  #       case argument(arg) do
-  #         {:ok, arg, rest, _, _, _} ->
-  #           {field, arg, rest}
-
-  #         {:error, _e, _rest, _, _, _} ->
-  #           {nil, input}
-  #       end
-
-  #     {:error, _e, _rest, _, _, _} ->
-  #       {nil, input}
-  #   end
-  # end
 end
