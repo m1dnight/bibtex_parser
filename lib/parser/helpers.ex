@@ -1,15 +1,23 @@
 defmodule BibTex.Parser.Helpers do
   import NimbleParsec
 
-  defp not_space(<<?\s, _::binary>>, context, _, _), do: {:halt, context}
-  defp not_Space(_, context, _, _), do: {:cont, context}
+  @doc """
+  Eats up the given char if it exists on the input, and then ignores it.
+  """
+  def ignore_optional_char(char) do
+    ascii_char([char])
+    |> optional()
+    |> ignore()
+  end
 
-  # Parses whitespace.
-  def whites() do
-    ascii_char([?\s])
-    |> repeat_while(
-      ascii_char([?\s]),
-      {:not_space, []}
+  @doc """
+  Eats up any whitespace at the beginning of the stream, including tabs etc.
+  """
+  def whitespaces do
+    repeat_until(
+      ascii_char([?\s, ?\t, ?\n, ?\r, ?\f, ?\v]),
+      [ascii_char([{:not, ?\s}, {:not, ?\t}, {:not, ?\n}, {:not, ?\r}, {:not, ?\f}, {:not, ?\v}])]
     )
+    |> ignore()
   end
 end

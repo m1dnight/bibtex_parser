@@ -1,53 +1,7 @@
 defmodule BibTex.Parser do
   import NimbleParsec
+  import BibTex.Parser.Helpers
   require Logger
-
-  # ------------------------------------ Helpers -------------------------------#
-  #
-  # Comma: Parses and "eats" a comma.
-  #
-
-  comma =
-    ascii_char([?,])
-    |> optional()
-    |> ignore()
-
-  defparsec(:comma, comma, debug: true)
-
-  #
-  # Quote: Parses and "eats" a quote.
-  #
-
-  quot =
-    ascii_char([?"])
-    |> optional()
-    |> ignore()
-
-  defparsec(:quot, quot, debug: true)
-
-  #
-  # RBrace: Parses and "eats" a right brace.
-  #
-
-  rbrace =
-    ascii_char([?}])
-    |> optional()
-    |> ignore()
-
-  defparsec(:rbrace, rbrace, debug: true)
-
-  #
-  # Whitespace: Parses and "eats" all the whitespace in front of the input.
-  #
-
-  whitespaces =
-    repeat_until(
-      ascii_char([?\s, ?\t, ?\n, ?\r, ?\f, ?\v]),
-      [ascii_char([{:not, ?\s}, {:not, ?\t}, {:not, ?\n}, {:not, ?\r}, {:not, ?\f}, {:not, ?\v}])]
-    )
-    |> ignore()
-
-  defparsec(:whitespace, whitespaces, debug: true)
 
   #
   # Symbol: Parses a legit symbol (all unicode, no spaces, no newlines, ..)
@@ -57,24 +11,22 @@ defmodule BibTex.Parser do
 
   # ------------------------------------ Components ----------------------------#
 
-  defparsec(:symbol, symbol, debug: true)
-
   #
   # Tag: Parses a field in a bibtex file. (E.g., author, title, pages,..)
   #
 
   tag =
-    whitespaces
+    whitespaces()
     |> ignore()
-    |> concat(comma)
+    |> concat(ignore_optional_char(?,))
     |> concat(symbol)
     |> repeat_until(
       symbol,
       [ascii_char([?=])]
     )
-    |> concat(whitespaces)
-    |> concat(comma)
-    |> concat(whitespaces)
+    |> concat(whitespaces())
+    |> concat(ignore_optional_char(?,))
+    |> concat(whitespaces())
 
   defparsec(:tag, tag, debug: true)
 
@@ -83,11 +35,11 @@ defmodule BibTex.Parser do
   #
 
   quoted_tag_content =
-    whitespaces
+    whitespaces()
     |> ignore()
     |> ascii_char([?=])
     |> ignore()
-    |> concat(whitespaces)
+    |> concat(whitespaces())
     |> ascii_char([?"])
     |> ignore()
     |> ascii_char([])
@@ -95,18 +47,16 @@ defmodule BibTex.Parser do
       ascii_char([]),
       [ascii_char([?"])]
     )
-    |> concat(whitespaces)
-    |> concat(quot)
-    |> concat(whitespaces)
-    |> concat(comma)
-    |> concat(whitespaces)
-
-  defparsec(:quoted_tag_content, quoted_tag_content, debug: true)
+    |> concat(whitespaces())
+    |> concat(ignore_optional_char(?"))
+    |> concat(whitespaces())
+    |> concat(ignore_optional_char(?,))
+    |> concat(whitespaces())
 
   braced_tag_content =
-    whitespaces
+    whitespaces()
     |> ascii_char([?=])
-    |> concat(whitespaces)
+    |> concat(whitespaces())
     |> ascii_char([?{])
     |> ignore()
     |> ascii_char([])
@@ -114,13 +64,11 @@ defmodule BibTex.Parser do
       ascii_char([]),
       [ascii_char([?}])]
     )
-    |> concat(whitespaces)
-    |> concat(rbrace)
-    |> concat(whitespaces)
-    |> concat(comma)
-    |> concat(whitespaces)
-
-  defparsec(:braced_tag_content, braced_tag_content, debug: true)
+    |> concat(whitespaces())
+    |> concat(ignore_optional_char(?}))
+    |> concat(whitespaces())
+    |> concat(ignore_optional_char(?,))
+    |> concat(whitespaces())
 
   tag_content = choice([quoted_tag_content, braced_tag_content])
 
@@ -133,14 +81,14 @@ defmodule BibTex.Parser do
   type =
     string("@")
     |> ignore()
-    |> concat(whitespaces)
+    |> concat(whitespaces())
     |> ignore()
     |> ascii_char([])
     |> repeat_until(
       symbol,
       [ascii_char([?{])]
     )
-    |> concat(whitespaces)
+    |> concat(whitespaces())
 
   defparsec(:type, type, debug: true)
 
@@ -150,15 +98,15 @@ defmodule BibTex.Parser do
 
   ref_label =
     ascii_char([?{])
-    |> concat(whitespaces)
+    |> concat(whitespaces())
     |> ignore()
     |> ascii_char([])
     |> repeat_until(
       symbol,
       [ascii_char([?,]), ascii_char([?\s])]
     )
-    |> concat(whitespaces)
-    |> concat(comma)
+    |> concat(whitespaces())
+    |> concat(ignore_optional_char(?,))
 
   defparsec(:label, ref_label, debug: true)
 
