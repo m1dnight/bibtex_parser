@@ -41,7 +41,7 @@ end
 
  - Can not parse full BibTex files. 
    - No support for `@STRING`, `@PREAMBLE`, or `@COMMENT`.
- - String concatenation (e.g., `author = "Jose" # "Valim"`) not supported yet.
+ - ~~String concatenation (e.g., `author = "Jose" # "Valim"`) not supported yet.~~
  - Documentation
 
 

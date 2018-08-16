@@ -4,7 +4,7 @@ defmodule BibtexParser.MixProject do
   def project do
     [
       app: :bibtex_parser,
-      version: "0.1.0",
+      version: "0.1.2",
       elixir: "~> 1.6",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
