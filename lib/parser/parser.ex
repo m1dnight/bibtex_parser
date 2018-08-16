@@ -3,12 +3,6 @@ defmodule BibTex.Parser do
   import BibTex.Parser.Helpers
   require Logger
 
-  #
-  # Symbol: Parses a legit symbol (all unicode, no spaces, no newlines, ..)
-  #
-
-  symbol = ascii_char([?A..?Z, ?a..?z, ?., ?0..?9, ?,])
-
   # ------------------------------------ Components ----------------------------#
 
   #
@@ -17,11 +11,10 @@ defmodule BibTex.Parser do
 
   tag =
     whitespaces()
-    |> ignore()
     |> concat(ignore_optional_char(?,))
-    |> concat(symbol)
+    |> concat(symbol())
     |> repeat_until(
-      symbol,
+      symbol(),
       [ascii_char([?=])]
     )
     |> concat(whitespaces())
@@ -36,12 +29,9 @@ defmodule BibTex.Parser do
 
   quoted_tag_content =
     whitespaces()
-    |> ignore()
-    |> ascii_char([?=])
-    |> ignore()
+    |> concat(ignore_required_char(?=))
     |> concat(whitespaces())
-    |> ascii_char([?"])
-    |> ignore()
+    |> concat(ignore_required_char(?"))
     |> ascii_char([])
     |> repeat_until(
       ascii_char([]),
@@ -55,17 +45,16 @@ defmodule BibTex.Parser do
 
   braced_tag_content =
     whitespaces()
-    |> ascii_char([?=])
+    |> concat(ignore_required_char(?=))
     |> concat(whitespaces())
-    |> ascii_char([?{])
-    |> ignore()
+    |> concat(ignore_required_char(?{))
     |> ascii_char([])
     |> repeat_until(
       ascii_char([]),
       [ascii_char([?}])]
     )
     |> concat(whitespaces())
-    |> concat(ignore_optional_char(?}))
+    |> concat(ignore_required_char(?}))
     |> concat(whitespaces())
     |> concat(ignore_optional_char(?,))
     |> concat(whitespaces())
@@ -79,13 +68,11 @@ defmodule BibTex.Parser do
   #
 
   type =
-    string("@")
-    |> ignore()
+    ignore_required_char(?@)
     |> concat(whitespaces())
-    |> ignore()
     |> ascii_char([])
     |> repeat_until(
-      symbol,
+      symbol(),
       [ascii_char([?{])]
     )
     |> concat(whitespaces())
@@ -97,12 +84,11 @@ defmodule BibTex.Parser do
   #
 
   ref_label =
-    ascii_char([?{])
+    ignore_required_char(?{)
     |> concat(whitespaces())
-    |> ignore()
-    |> ascii_char([])
+    |> concat(symbol())
     |> repeat_until(
-      symbol,
+      symbol(),
       [ascii_char([?,]), ascii_char([?\s])]
     )
     |> concat(whitespaces())
@@ -164,7 +150,7 @@ defmodule BibTex.Parser do
       {:ok, {tag, content}, rest} ->
         [{tag |> to_string |> String.to_atom(), content}] ++ parse_tags(rest)
 
-      {:error, e, _input} ->
+      {:error, _e, _input} ->
         []
     end
   end

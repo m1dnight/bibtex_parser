@@ -4,6 +4,14 @@ defmodule BibTex.Parser.Helpers do
   @doc """
   Eats up the given char if it exists on the input, and then ignores it.
   """
+  def ignore_required_char(char) do
+    ascii_char([char])
+    |> ignore()
+  end
+
+  @doc """
+  Eats up the given char if it exists on the input, and then ignores it.
+  """
   def ignore_optional_char(char) do
     ascii_char([char])
     |> optional()
@@ -19,5 +27,12 @@ defmodule BibTex.Parser.Helpers do
       [ascii_char([{:not, ?\s}, {:not, ?\t}, {:not, ?\n}, {:not, ?\r}, {:not, ?\f}, {:not, ?\v}])]
     )
     |> ignore()
+  end
+
+  @doc """
+  Parses one valid symbol. This is defined in terms of which symbols are valid in a bibtex file.
+  """
+  def symbol do
+    ascii_char([?A..?Z, ?a..?z, ?., ?0..?9, ?,])
   end
 end
