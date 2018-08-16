@@ -27,10 +27,10 @@ defmodule BibTex.Parser do
   # Argument: The value of a bibtex field. Currently the string in between quotes.
   #
 
-  quoted_tag_content =
+  hashtag = ignore_required_char(?#)
+
+  quoted_tag_content_concat =
     whitespaces()
-    |> concat(ignore_required_char(?=))
-    |> concat(whitespaces())
     |> concat(ignore_required_char(?"))
     |> ascii_char([])
     |> repeat_until(
@@ -40,13 +40,15 @@ defmodule BibTex.Parser do
     |> concat(whitespaces())
     |> concat(ignore_optional_char(?"))
     |> concat(whitespaces())
-    |> concat(ignore_optional_char(?,))
-    |> concat(whitespaces())
 
-  braced_tag_content =
+  defparsec(
+    :quoted,
+    quoted_tag_content_concat |> optional(hashtag |> parsec(:quoted)),
+    debug: true
+  )
+
+  braced =
     whitespaces()
-    |> concat(ignore_required_char(?=))
-    |> concat(whitespaces())
     |> concat(ignore_required_char(?{))
     |> ascii_char([])
     |> repeat_until(
@@ -59,7 +61,12 @@ defmodule BibTex.Parser do
     |> concat(ignore_optional_char(?,))
     |> concat(whitespaces())
 
-  tag_content = choice([quoted_tag_content, braced_tag_content])
+  tag_content =
+    whitespaces()
+    |> concat(ignore_required_char(?=))
+    |> concat(whitespaces())
+    |> choice([parsec(:quoted), braced])
+    |> concat(ignore_optional_char(?,))
 
   defparsec(:tag_content, tag_content, debug: false)
 

@@ -73,4 +73,28 @@ defmodule BibTex.Test.Entries do
 
     {:ok, ^result} = Parser.parse_entry(input)
   end
+
+  test "Entry Test 4" do
+    input = """
+    @techreport{bobscoolpaper,
+      title="Elixir" # " is " # "the bees" # " " # "knees",
+      author="Jose " # "Valim",
+      year={1985},
+      institution={MASSACHUSETTS INST OF TECH CAMBRIDGE ARTIFICIAL INTELLIGENCE LAB}
+    }
+    """
+
+    result = %{
+      label: 'bobscoolpaper',
+      tags: [
+        title: 'Elixir is the bees knees',
+        author: 'Jose Valim',
+        year: '1985',
+        institution: 'MASSACHUSETTS INST OF TECH CAMBRIDGE ARTIFICIAL INTELLIGENCE LAB'
+      ],
+      type: 'techreport'
+    }
+
+    {:ok, ^result} = Parser.parse_entry(input)
+  end
 end
