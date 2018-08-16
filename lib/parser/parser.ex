@@ -21,7 +21,7 @@ defmodule BibTex.Parser do
     |> concat(ignore_optional_char(?,))
     |> concat(whitespaces())
 
-  defparsec(:tag, tag, debug: true)
+  defparsec(:tag, tag, debug: false)
 
   #
   # Argument: The value of a bibtex field. Currently the string in between quotes.
@@ -61,7 +61,7 @@ defmodule BibTex.Parser do
 
   tag_content = choice([quoted_tag_content, braced_tag_content])
 
-  defparsec(:tag_content, tag_content, debug: true)
+  defparsec(:tag_content, tag_content, debug: false)
 
   #
   # Type: Parses the type from the bibtex entry. E.g., book, article, ..
@@ -77,7 +77,7 @@ defmodule BibTex.Parser do
     )
     |> concat(whitespaces())
 
-  defparsec(:type, type, debug: true)
+  defparsec(:type, type, debug: false)
 
   #
   # Ref_label: Parses the reference label from the bibtex.
@@ -94,13 +94,13 @@ defmodule BibTex.Parser do
     |> concat(whitespaces())
     |> concat(ignore_optional_char(?,))
 
-  defparsec(:label, ref_label, debug: true)
+  defparsec(:label, ref_label, debug: false)
 
   #
   # Helpers: Higher-level parser functions.
   #
 
-  defparsec(:typelabel, type |> concat(ref_label), debug: true)
+  defparsec(:typelabel, type |> concat(ref_label), debug: false)
 
   def parse_entry(input) do
     with {:ok, type, rest} <- parse_type(input),

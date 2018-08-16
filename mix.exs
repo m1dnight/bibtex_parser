@@ -8,8 +8,8 @@ defmodule BibtexParser.MixProject do
       elixir: "~> 1.6",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
-      package: package,
-      description: description
+      package: package(),
+      description: description()
     ]
   end
 

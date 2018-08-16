@@ -12,7 +12,7 @@ defmodule BibtexParser do
 
     """
 
-    result = parse_entry(input)
+    _result = parse_entry(input)
 
     # => {:ok,
     #  %{
