@@ -3,6 +3,29 @@ defmodule BibTex.Test.Entries do
   doctest BibtexParser
   alias BibTex.Parser
 
+  test "Entry Test 0" do
+    input = """
+    @misc{ Nobody06,
+           author = "Nobody Jr",
+           title = "My Article",
+           year = 2006,
+          pages = "1--10", }
+    """
+
+    result = %{
+      label: 'Nobody06',
+      tags: [
+        author: 'Nobody Jr',
+        title: 'My Article',
+        year: '2006',
+        pages: '1--10'
+      ],
+      type: 'misc'
+    }
+
+    {:ok, ^result, _} = Parser.parse_entry(input)
+  end
+
   test "Entry Test 1" do
     input = """
     @misc{ Nobody06,
@@ -23,7 +46,7 @@ defmodule BibTex.Test.Entries do
       type: 'misc'
     }
 
-    {:ok, ^result} = Parser.parse_entry(input)
+    {:ok, ^result, _} = Parser.parse_entry(input)
   end
 
   test "Entry Test 2" do
@@ -47,7 +70,7 @@ defmodule BibTex.Test.Entries do
       type: 'techreport'
     }
 
-    {:ok, ^result} = Parser.parse_entry(input)
+    {:ok, ^result, _} = Parser.parse_entry(input)
   end
 
   test "Entry Test 3" do
@@ -71,7 +94,7 @@ defmodule BibTex.Test.Entries do
       type: 'techreport'
     }
 
-    {:ok, ^result} = Parser.parse_entry(input)
+    {:ok, ^result, _} = Parser.parse_entry(input)
   end
 
   test "Entry Test 4" do
@@ -95,6 +118,58 @@ defmodule BibTex.Test.Entries do
       type: 'techreport'
     }
 
-    {:ok, ^result} = Parser.parse_entry(input)
+    {:ok, ^result, _} = Parser.parse_entry(input)
+  end
+
+  test "File with comments and multiple entires" do
+    file = """
+    %  a sample bibliography file
+    %
+
+    @article{small,
+    author = {Freely, I.P.},
+    title = {A small paper},
+    journal = {The journal of small papers},
+    volume = {-1},
+    note = {to appear},
+    }
+
+    @article{big,
+    author = {Jass, Hugh},
+    title = {A big paper},
+    journal = {The journal of big papers},
+    volume = {MCMXCVII},
+    }
+
+    %  The authors mentioned here are almost, but not quite,
+    %  entirely unrelated to Matt Groening.
+    """
+
+    result =
+      {[
+         %{
+           label: 'small',
+           tags: [
+             author: 'Freely, I.P.',
+             title: 'A small paper',
+             journal: 'The journal of small papers',
+             volume: '-1',
+             note: 'to appear'
+           ],
+           type: 'article'
+         },
+         %{
+           label: 'big',
+           tags: [
+             author: 'Jass, Hugh',
+             title: 'A big paper',
+             journal: 'The journal of big papers',
+             volume: 'MCMXCVII'
+           ],
+           type: 'article'
+         }
+       ], ""}
+
+    assert result == Parser.parse_entries(file)
   end
 end

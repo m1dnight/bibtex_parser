@@ -6,6 +6,34 @@ defmodule BibTex.Parser do
   # ------------------------------------ Components ----------------------------#
 
   #
+  # Comment: Parses a comment in a bibtex file.
+  #
+
+  comment =
+    whitespaces()
+    |> concat(ascii_char([?%]))
+    |> repeat_until(
+      utf8_char([]),
+      [ascii_char([?\n])]
+    )
+    |> ignore()
+
+  # defparsec(:comment, comment, debug: false)
+
+  comments = repeat(comment) |> concat(newlines())
+  # repeat(
+  #   whitespaces()
+  #   |> concat(ascii_char([?%]))
+  #   |> repeat_until(
+  #     utf8_char([]),
+  #     [ascii_char([?\n])]
+  #   )
+  #   |> ignore()
+  # )
+
+  defparsec(:comments, comments, debug: false)
+
+  #
   # Tag: Parses a field in a bibtex file. (E.g., author, title, pages,..)
   #
 
@@ -47,6 +75,16 @@ defmodule BibTex.Parser do
     debug: true
   )
 
+  number_value =
+    whitespaces()
+    |> repeat_until(
+      ascii_char([?0..?9]),
+      [ascii_char([{:not, ?0..?9}])]
+    )
+    |> concat(whitespaces())
+    |> concat(ignore_optional_char(?,))
+    |> concat(whitespaces())
+
   braced =
     whitespaces()
     |> concat(ignore_required_char(?{))
@@ -65,7 +103,7 @@ defmodule BibTex.Parser do
     whitespaces()
     |> concat(ignore_required_char(?=))
     |> concat(whitespaces())
-    |> choice([parsec(:quoted), braced])
+    |> choice([parsec(:quoted), braced, number_value])
     |> concat(ignore_optional_char(?,))
 
   defparsec(:tag_content, tag_content, debug: false)
@@ -103,17 +141,33 @@ defmodule BibTex.Parser do
 
   defparsec(:label, ref_label, debug: false)
 
+  # ------------------------------------ File ----------------------------------#
+
   #
   # Helpers: Higher-level parser functions.
   #
 
   defparsec(:typelabel, type |> concat(ref_label), debug: false)
 
+  defparsec(:eatbrace, ignore_optional_char(?}) |> concat(newlines()), debug: false)
+
+  def parse_entries(content) do
+    with {:ok, [], rest, _, _, _} <- comments(content),
+         {:ok, entry, r} <- parse_entry(rest) do
+      {entries, rest} = parse_entries(r)
+      {[entry | entries], rest}
+    else
+      {:error, _e, rest} ->
+        {[], rest}
+    end
+  end
+
   def parse_entry(input) do
     with {:ok, type, rest} <- parse_type(input),
          {:ok, label, rest} <- parse_label(rest),
-         tags <- parse_tags(rest) do
-      {:ok, %{:type => type, :label => label, :tags => tags}}
+         {tags, rest} <- parse_tags(rest),
+         {:ok, _, rest, _, _, _} <- eatbrace(rest) do
+      {:ok, %{:type => type, :label => label, :tags => tags}, rest}
     else
       {:error, e, rest} ->
         {:error, e, rest}
@@ -155,10 +209,11 @@ defmodule BibTex.Parser do
 
     case result do
       {:ok, {tag, content}, rest} ->
-        [{tag |> to_string |> String.to_atom(), content}] ++ parse_tags(rest)
+        {tags, rest} = parse_tags(rest)
+        {[{tag |> to_string |> String.to_atom(), content} | tags], rest}
 
-      {:error, _e, _input} ->
-        []
+      {:error, _e, input} ->
+        {[], input}
     end
   end
 

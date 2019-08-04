@@ -30,6 +30,17 @@ defmodule BibTex.Parser.Helpers do
   end
 
   @doc """
+  Eats up any consecutive newlines.
+  """
+  def newlines do
+    repeat_until(
+      ascii_char([?\n]),
+      [ascii_char([{:not, ?\n}])]
+    )
+    |> ignore()
+  end
+
+  @doc """
   Parses one valid symbol. This is defined in terms of which symbols are valid in a bibtex file.
   """
   def symbol do

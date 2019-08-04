@@ -43,6 +43,7 @@ end
    - No support for `@STRING`, `@PREAMBLE`, or `@COMMENT`.
  - ~~String concatenation (e.g., `author = "Jose" # "Valim"`) not supported yet.~~
  - Documentation
+ - Unquoted tag values (e.g., a year)
 
 
 ## Installation

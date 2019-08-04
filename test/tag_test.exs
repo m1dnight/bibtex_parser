@@ -20,4 +20,13 @@ defmodule BibTex.Test.Tag do
     assert result == 'foobar'
     assert rest == "=\s\"baz\""
   end
+
+  test "Tag Test 3" do
+    input = ~s(foobar= 1234)
+
+    {:ok, result, rest, _, _, _} = Parser.tag(input)
+
+    assert result == 'foobar'
+    assert rest == "= 1234"
+  end
 end
