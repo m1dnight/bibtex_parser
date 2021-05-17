@@ -4,7 +4,7 @@ defmodule BibtexParser.MixProject do
   def project do
     [
       app: :bibtex_parser,
-      version: "0.1.2",
+      version: "0.2.0",
       elixir: "~> 1.6",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
@@ -37,6 +37,6 @@ defmodule BibtexParser.MixProject do
 
   # Run "mix help deps" to learn about dependencies.
   def deps do
-    [{:nimble_parsec, "~> 1.1.0"}, {:ex_doc, ">= 0.0.0", only: :dev}]
+    [{:nimble_parsec, "~> 1.1.0"}, {:ex_doc, "~> 0.24.2", only: :dev}]
   end
 end

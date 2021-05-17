@@ -1,4 +1,5 @@
 defmodule BibtexParser.Writer do
+  @moduledoc false
   def to_string(entries) when is_list(entries) do
     entries
     |> Enum.map(&BibtexParser.Writer.to_string/1)
