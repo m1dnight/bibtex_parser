@@ -1,7 +1,6 @@
 defmodule BibtexParser.Test.Checks do
   use ExUnit.Case
   doctest BibtexParser
-  alias BibtexParser.Checker
 
   test "Valid entry" do
     input = """
