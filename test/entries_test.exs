@@ -3,6 +3,7 @@ defmodule BibTex.Test.Entries do
   doctest BibtexParser
   alias BibTex.Parser
 
+  @tag :f
   test "Entry Test 0" do
     input = """
     @misc{ Nobody06,
@@ -23,7 +24,7 @@ defmodule BibTex.Test.Entries do
       type: 'misc'
     }
 
-    {:ok, ^result, _} = Parser.parse_entry(input)
+    {:ok, ^result, ""} = Parser.parse_entry(input)
   end
 
   test "Entry Test 1" do
@@ -273,6 +274,7 @@ defmodule BibTex.Test.Entries do
       tags: [
         author: 'Bartolom{\'{e}}'
       ],
+      type: 'inproceedings'
     }
 
     {:ok, ^result, _} = Parser.parse_entry(input)

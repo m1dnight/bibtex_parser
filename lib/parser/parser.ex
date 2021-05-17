@@ -18,18 +18,7 @@ defmodule BibTex.Parser do
     )
     |> ignore()
 
-  # defparsec(:comment, comment, debug: false)
-
   comments = repeat(comment) |> concat(newlines())
-  # repeat(
-  #   whitespaces()
-  #   |> concat(ascii_char([?%]))
-  #   |> repeat_until(
-  #     utf8_char([]),
-  #     [ascii_char([?\n])]
-  #   )
-  #   |> ignore()
-  # )
 
   defparsec(:comments, comments, debug: false)
 
@@ -75,13 +64,6 @@ defmodule BibTex.Parser do
     debug: false
   )
 
-  trimmable =
-    choice([
-      replace(ascii_char([?\n]), ?\s) |> concat(whitespaces()),
-      choice([ascii_char([?\ ]), ascii_char([?\ ])]) |> concat(whitespaces()),
-      ascii_char([])
-    ])
-
   number_value =
     whitespaces()
     |> repeat(
@@ -92,26 +74,39 @@ defmodule BibTex.Parser do
     |> concat(ignore_optional_char(?,))
     |> concat(whitespaces())
 
-  braced_text =
+  trimmable =
+    choice([
+      replace(ascii_char([?\n]), ?\s) |> concat(whitespaces()),
+      choice([ascii_char([?\ ]), ascii_char([?\ ])]) |> concat(whitespaces()),
+      ascii_char([])
+    ])
+
+  regular_content = trimmable
+
+  defparsec(
+    :wrapped_in_braces,
     ascii_char([?{])
     |> repeat(
       lookahead_not(ascii_char([?}]))
-      |> ascii_char([])
+      |> choice([parsec(:wrapped_in_braces), regular_content])
     )
     |> ascii_char([?}])
+  )
 
   braced =
     whitespaces()
     |> concat(ignore_required_char(?{))
     |> repeat(
       lookahead_not(ascii_char([?}]))
-      |> choice([braced_text, trimmable])
+      |> choice([parsec(:wrapped_in_braces), regular_content])
     )
     |> concat(whitespaces())
     |> concat(ignore_required_char(?}))
     |> concat(whitespaces())
     |> concat(ignore_optional_char(?,))
     |> concat(whitespaces())
+
+  defparsec(:braced, braced, debug: false)
 
   tag_content =
     whitespaces()
@@ -164,7 +159,9 @@ defmodule BibTex.Parser do
 
   defparsec(:typelabel, type |> concat(ref_label), debug: false)
 
-  defparsec(:eatbrace, ignore_optional_char(?}) |> concat(newlines()), debug: false)
+  defparsec(:eatbrace, whitespaces() |> concat(ignore_optional_char(?})) |> concat(whitespaces()),
+    debug: false
+  )
 
   def parse_entries(content) do
     with {:ok, [], rest, _, _, _} <- comments(content),
