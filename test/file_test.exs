@@ -10,6 +10,6 @@ defmodule BibTex.Test.File do
 
     {:ok, _, rem} = Parser.parse_entry(input)
 
-    # assert rem == ""
+    assert rem == ""
   end
 end
