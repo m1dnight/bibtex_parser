@@ -85,11 +85,19 @@ defmodule BibTex.Parser do
     |> concat(ignore_optional_char(?,))
     |> concat(whitespaces())
 
+  braced_text =
+    ascii_char([?{])
+    |> repeat_until(
+      ascii_char([]),
+      [ascii_char([?}])]
+    )
+    |> ascii_char([?}])
+
   braced =
     whitespaces()
     |> concat(ignore_required_char(?{))
     |> repeat_until(
-      ascii_char([]),
+      choice([braced_text, ascii_char([])]),
       [ascii_char([?}])]
     )
     |> concat(whitespaces())

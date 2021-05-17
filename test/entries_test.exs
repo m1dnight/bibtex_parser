@@ -187,6 +187,24 @@ defmodule BibTex.Test.Entries do
     {:ok, ^result, _} = Parser.parse_entry(input)
   end
 
+  test "Entry Test 8: Braces in title" do
+    input = """
+    @techreport{foo,
+    title     = {{ESCAPE:} {A} Component-Based Policy Framework for Sense and React Applications},
+    }
+    """
+
+    result = %{
+      label: 'foo',
+      tags: [
+        title: '{ESCAPE:} {A} Component-Based Policy Framework for Sense and React Applications'
+      ],
+      type: 'techreport'
+    }
+
+    {:ok, ^result, _} = Parser.parse_entry(input)
+  end
+
   test "File with comments and multiple entires" do
     file = """
     %  a sample bibliography file
