@@ -179,7 +179,7 @@ defmodule BibTex.Test.Entries do
     result = %{
       label: 'foo',
       tags: [
-        title: 'Elixir Rules'
+        title: 'Elixir {Rules}'
       ],
       type: 'techreport'
     }

@@ -88,7 +88,6 @@ defmodule BibTex.Parser do
   braced =
     whitespaces()
     |> concat(ignore_required_char(?{))
-    |> ascii_char([])
     |> repeat_until(
       ascii_char([]),
       [ascii_char([?}])]
