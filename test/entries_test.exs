@@ -261,6 +261,23 @@ defmodule BibTex.Test.Entries do
     {:ok, ^result, _} = Parser.parse_entry(input)
   end
 
+  test "Entry Test 12: Special characters" do
+    input = """
+    @inproceedings{DBLP:conf/icsnc/RubioDT07,
+    author    = {Bartolom{\'{e}}}
+    }
+    """
+
+    result = %{
+      label: 'DBLP:conf/icsnc/RubioDT07',
+      tags: [
+        author: 'Bartolom{\'{e}}'
+      ],
+    }
+
+    {:ok, ^result, _} = Parser.parse_entry(input)
+  end
+
   test "File with comments and multiple entires" do
     file = """
     %  a sample bibliography file
