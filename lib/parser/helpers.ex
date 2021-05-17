@@ -1,4 +1,5 @@
 defmodule BibtexParser.Parser.Helpers do
+  @moduledoc false
   import NimbleParsec
 
   @doc """

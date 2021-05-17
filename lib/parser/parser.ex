@@ -1,4 +1,5 @@
 defmodule BibtexParser.Parser do
+  @moduledoc false
   import NimbleParsec
   import BibtexParser.Parser.Helpers
   require Logger

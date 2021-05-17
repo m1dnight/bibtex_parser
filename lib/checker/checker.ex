@@ -1,4 +1,6 @@
 defmodule BibtexParser.Checker do
+  @moduledoc false
+
   def check(entries) when is_list(entries) do
     errors = []
 
