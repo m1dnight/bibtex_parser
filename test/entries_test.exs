@@ -3,7 +3,6 @@ defmodule BibtexParser.Test.Entries do
   doctest BibtexParser
   alias BibtexParser.Parser
 
-  @tag :f
   test "Entry Test 0" do
     input = """
     @misc{ Nobody06,
@@ -14,14 +13,14 @@ defmodule BibtexParser.Test.Entries do
     """
 
     result = %{
-      label: 'Nobody06',
+      label: "Nobody06",
       tags: [
-        author: 'Nobody Jr',
-        title: 'My Article',
-        year: '2006',
-        pages: '1--10'
+        author: "Nobody Jr",
+        title: "My Article",
+        year: "2006",
+        pages: "1--10"
       ],
-      type: 'misc'
+      type: "misc"
     }
 
     {:ok, ^result, ""} = Parser.parse_entry(input)
@@ -37,14 +36,14 @@ defmodule BibtexParser.Test.Entries do
     """
 
     result = %{
-      label: 'Nobody06',
+      label: "Nobody06",
       tags: [
-        author: 'Nobody Jr',
-        title: 'My Article',
-        year: '2006',
-        pages: '1--10'
+        author: "Nobody Jr",
+        title: "My Article",
+        year: "2006",
+        pages: "1--10"
       ],
-      type: 'misc'
+      type: "misc"
     }
 
     {:ok, ^result, _} = Parser.parse_entry(input)
@@ -61,14 +60,14 @@ defmodule BibtexParser.Test.Entries do
     """
 
     result = %{
-      label: 'agha1985actors',
+      label: "agha1985actors",
       tags: [
-        title: 'Actors: A model of concurrent computation in distributed systems.',
-        author: 'Agha, Gul A',
-        year: '1985',
-        institution: 'MASSACHUSETTS INST OF TECH CAMBRIDGE ARTIFICIAL INTELLIGENCE LAB'
+        title: "Actors: A model of concurrent computation in distributed systems.",
+        author: "Agha, Gul A",
+        year: "1985",
+        institution: "MASSACHUSETTS INST OF TECH CAMBRIDGE ARTIFICIAL INTELLIGENCE LAB"
       ],
-      type: 'techreport'
+      type: "techreport"
     }
 
     {:ok, ^result, _} = Parser.parse_entry(input)
@@ -85,14 +84,14 @@ defmodule BibtexParser.Test.Entries do
     """
 
     result = %{
-      label: 'agha1985actors',
+      label: "agha1985actors",
       tags: [
-        title: 'Actors: A model of concurrent computation in distributed systems.',
-        author: 'Agha, Gul A',
-        year: '1985',
-        institution: 'MASSACHUSETTS INST OF TECH CAMBRIDGE ARTIFICIAL INTELLIGENCE LAB'
+        title: "Actors: A model of concurrent computation in distributed systems.",
+        author: "Agha, Gul A",
+        year: "1985",
+        institution: "MASSACHUSETTS INST OF TECH CAMBRIDGE ARTIFICIAL INTELLIGENCE LAB"
       ],
-      type: 'techreport'
+      type: "techreport"
     }
 
     {:ok, ^result, _} = Parser.parse_entry(input)
@@ -109,14 +108,14 @@ defmodule BibtexParser.Test.Entries do
     """
 
     result = %{
-      label: 'bobscoolpaper',
+      label: "bobscoolpaper",
       tags: [
-        title: 'Elixir is the bees knees',
-        author: 'Jose Valim',
-        year: '1985',
-        institution: 'MASSACHUSETTS INST OF TECH CAMBRIDGE ARTIFICIAL INTELLIGENCE LAB'
+        title: "Elixir is the bees knees",
+        author: "Jose Valim",
+        year: "1985",
+        institution: "MASSACHUSETTS INST OF TECH CAMBRIDGE ARTIFICIAL INTELLIGENCE LAB"
       ],
-      type: 'techreport'
+      type: "techreport"
     }
 
     {:ok, ^result, _} = Parser.parse_entry(input)
@@ -133,14 +132,14 @@ defmodule BibtexParser.Test.Entries do
     """
 
     result = %{
-      label: 'bobscoolpaper',
+      label: "bobscoolpaper",
       tags: [
-        title: 'Elixir is the bees knees',
-        author: 'Jose Valim',
-        year: '1985',
-        institution: 'MASSACHUSETTS INST OF TECH CAMBRIDGE ARTIFICIAL INTELLIGENCE LAB'
+        title: "Elixir is the bees knees",
+        author: "Jose Valim",
+        year: "1985",
+        institution: "MASSACHUSETTS INST OF TECH CAMBRIDGE ARTIFICIAL INTELLIGENCE LAB"
       ],
-      type: 'techreport'
+      type: "techreport"
     }
 
     {:ok, ^result, _} = Parser.parse_entry(input)
@@ -157,14 +156,14 @@ defmodule BibtexParser.Test.Entries do
     """
 
     result = %{
-      label: 'DBLP:conf/cbse/RusselloMD08',
+      label: "DBLP:conf/cbse/RusselloMD08",
       tags: [
-        title: 'Elixir is the bees knees',
-        author: 'Jose Valim',
-        year: '1985',
-        institution: 'MASSACHUSETTS INST OF TECH CAMBRIDGE ARTIFICIAL INTELLIGENCE LAB'
+        title: "Elixir is the bees knees",
+        author: "Jose Valim",
+        year: "1985",
+        institution: "MASSACHUSETTS INST OF TECH CAMBRIDGE ARTIFICIAL INTELLIGENCE LAB"
       ],
-      type: 'techreport'
+      type: "techreport"
     }
 
     {:ok, ^result, _} = Parser.parse_entry(input)
@@ -178,11 +177,11 @@ defmodule BibtexParser.Test.Entries do
     """
 
     result = %{
-      label: 'foo',
+      label: "foo",
       tags: [
-        title: 'Elixir {Rules}'
+        title: "Elixir {Rules}"
       ],
-      type: 'techreport'
+      type: "techreport"
     }
 
     {:ok, ^result, _} = Parser.parse_entry(input)
@@ -196,11 +195,11 @@ defmodule BibtexParser.Test.Entries do
     """
 
     result = %{
-      label: 'foo',
+      label: "foo",
       tags: [
-        title: '{ESCAPE:} {A} Component-Based Policy Framework for Sense and React Applications'
+        title: "{ESCAPE:} {A} Component-Based Policy Framework for Sense and React Applications"
       ],
-      type: 'techreport'
+      type: "techreport"
     }
 
     {:ok, ^result, _} = Parser.parse_entry(input)
@@ -214,11 +213,11 @@ defmodule BibtexParser.Test.Entries do
     """
 
     result = %{
-      label: 'foo',
+      label: "foo",
       tags: [
-        title: '{{{This}}} is stupid'
+        title: "{{{This}}} is stupid"
       ],
-      type: 'techreport'
+      type: "techreport"
     }
 
     {:ok, ^result, _} = Parser.parse_entry(input)
@@ -234,11 +233,11 @@ defmodule BibtexParser.Test.Entries do
     """
 
     result = %{
-      label: 'foo',
+      label: "foo",
       tags: [
-        title: 'This is a multiline title'
+        title: "This is a multiline title"
       ],
-      type: 'techreport'
+      type: "techreport"
     }
 
     {:ok, ^result, _} = Parser.parse_entry(input)
@@ -252,11 +251,11 @@ defmodule BibtexParser.Test.Entries do
     """
 
     result = %{
-      label: 'foo',
+      label: "foo",
       tags: [
-        title: 'A title'
+        title: "A title"
       ],
-      type: 'techreport'
+      type: "techreport"
     }
 
     {:ok, ^result, _} = Parser.parse_entry(input)
@@ -270,11 +269,11 @@ defmodule BibtexParser.Test.Entries do
     """
 
     result = %{
-      label: 'DBLP:conf/icsnc/RubioDT07',
+      label: "DBLP:conf/icsnc/RubioDT07",
       tags: [
-        author: 'Bartolom{\'{e}}'
+        author: "Bartolom{\'{e}}"
       ],
-      type: 'inproceedings'
+      type: "inproceedings"
     }
 
     {:ok, ^result, _} = Parser.parse_entry(input)
@@ -307,25 +306,25 @@ defmodule BibtexParser.Test.Entries do
     result =
       {[
          %{
-           label: 'small',
+           label: "small",
            tags: [
-             author: 'Freely, I.P.',
-             title: 'A small paper',
-             journal: 'The journal of small papers',
-             volume: '-1',
-             note: 'to appear'
+             author: "Freely, I.P.",
+             title: "A small paper",
+             journal: "The journal of small papers",
+             volume: "-1",
+             note: "to appear"
            ],
-           type: 'article'
+           type: "article"
          },
          %{
-           label: 'big',
+           label: "big",
            tags: [
-             author: 'Jass, Hugh',
-             title: 'A big paper',
-             journal: 'The journal of big papers',
-             volume: 'MCMXCVII'
+             author: "Jass, Hugh",
+             title: "A big paper",
+             journal: "The journal of big papers",
+             volume: "MCMXCVII"
            ],
-           type: 'article'
+           type: "article"
          }
        ], ""}
 

@@ -1,17 +1,25 @@
 defmodule BibtexParser do
-  import BibtexParser.Parser
+  def parse_string(str) do
+    {entries, _} = BibtexParser.Parser.parse_entries(str)
+
+    entries
+  end
+
+  def check_string(str) do
+    parse_string(str)
+    |> BibtexParser.Checker.check()
+  end
 
   def parse_file(path) do
-    {entries, _} =
+    entries =
       File.read!(path)
-      |> BibtexParser.Parser.parse_entries()
+      |> parse_string()
 
     entries
   end
 
   def check_file(path) do
-    content = parse_file(path)
-
-    BibtexParser.Checker.check(content)
+    parse_file(path)
+    |> BibtexParser.Checker.check()
   end
 end

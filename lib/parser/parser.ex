@@ -193,6 +193,7 @@ defmodule BibtexParser.Parser do
 
     case result do
       {:ok, result, rest, _, _, _} ->
+        result = to_string(result)
         {:ok, result, rest}
 
       {:error, e, _, _, _, _} ->
@@ -207,6 +208,7 @@ defmodule BibtexParser.Parser do
 
     case result do
       {:ok, result, rest, _, _, _} ->
+        result = to_string(result)
         {:ok, result, rest}
 
       {:error, e, _, _, _, _} ->
@@ -221,8 +223,10 @@ defmodule BibtexParser.Parser do
 
     case result do
       {:ok, {tag, content}, rest} ->
+        tag = String.downcase(to_string(tag))
+        content = to_string(content)
         {tags, rest} = parse_tags(rest)
-        {[{tag |> to_string |> String.to_atom(), content} | tags], rest}
+        {[{tag |> String.to_atom(), content} | tags], rest}
 
       {:error, _e, input} ->
         {[], input}
