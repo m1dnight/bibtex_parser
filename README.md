@@ -40,7 +40,7 @@ end
 ## Missing features
 
  - ~~an not parse full Bibtex files. ~~
-   - No support for `@STRING`, `@PREAMBLE`, or `@COMMENT`.
+ - No support for `@STRING`, `@PREAMBLE`, or `@COMMENT`.
  - ~~String concatenation (e.g., `author = "Jose" # "Valim"`) not supported yet.~~
  - ~~Documentation~~
  - ~~Unquoted tag values (e.g., a year)~~
