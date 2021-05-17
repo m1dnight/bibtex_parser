@@ -45,7 +45,7 @@ defmodule BibTex.Test.File do
 
     {entries, rem} = Parser.parse_entries(input)
 
-    # assert rem == ""
-    # assert entries == expected_entries
+    assert rem == ""
+    assert entries == expected_entries
   end
 end

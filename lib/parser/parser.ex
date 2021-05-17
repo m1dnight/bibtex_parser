@@ -77,8 +77,8 @@ defmodule BibTex.Parser do
 
   trimmable =
     choice([
-      replace(ascii_char([?\n]), ?\s),
-      ascii_char([?\ ]) |> concat(whitespaces()),
+      replace(ascii_char([?\n]), ?\s) |> concat(whitespaces()),
+      choice([ascii_char([?\ ]), ascii_char([?\ ])]) |> concat(whitespaces()),
       ascii_char([])
     ])
 
