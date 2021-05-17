@@ -169,6 +169,24 @@ defmodule BibTex.Test.Entries do
     {:ok, ^result, _} = Parser.parse_entry(input)
   end
 
+  test "Entry Test 7: Nested Bracing preserves capitalization" do
+    input = """
+    @techreport{foo,
+      title="Elixir {Rules}",
+    }
+    """
+
+    result = %{
+      label: 'foo',
+      tags: [
+        title: 'Elixir Rules'
+      ],
+      type: 'techreport'
+    }
+
+    {:ok, ^result, _} = Parser.parse_entry(input)
+  end
+
   test "File with comments and multiple entires" do
     file = """
     %  a sample bibliography file
