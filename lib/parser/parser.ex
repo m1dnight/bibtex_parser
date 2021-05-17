@@ -72,7 +72,7 @@ defmodule BibTex.Parser do
   defparsec(
     :quoted,
     quoted_tag_content_concat |> optional(hashtag |> parsec(:quoted)),
-    debug: true
+    debug: false
   )
 
   number_value =
@@ -113,7 +113,8 @@ defmodule BibTex.Parser do
   #
 
   type =
-    ignore_required_char(?@)
+    whitespaces()
+    |> concat(ignore_required_char(?@))
     |> concat(whitespaces())
     |> ascii_char([])
     |> repeat_until(

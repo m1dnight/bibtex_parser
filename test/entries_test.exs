@@ -121,6 +121,54 @@ defmodule BibTex.Test.Entries do
     {:ok, ^result, _} = Parser.parse_entry(input)
   end
 
+  test "Entry Test 5" do
+    input = """
+                      @techreport{bobscoolpaper,
+      title="Elixir" # " is " # "the bees" # " " # "knees",
+      author="Jose " # "Valim",
+      year={1985},
+      institution={MASSACHUSETTS INST OF TECH CAMBRIDGE ARTIFICIAL INTELLIGENCE LAB}
+    }
+    """
+
+    result = %{
+      label: 'bobscoolpaper',
+      tags: [
+        title: 'Elixir is the bees knees',
+        author: 'Jose Valim',
+        year: '1985',
+        institution: 'MASSACHUSETTS INST OF TECH CAMBRIDGE ARTIFICIAL INTELLIGENCE LAB'
+      ],
+      type: 'techreport'
+    }
+
+    {:ok, ^result, _} = Parser.parse_entry(input)
+  end
+
+  test "Entry Test 6: special chars in label" do
+    input = """
+    @techreport{DBLP:conf/cbse/RusselloMD08,
+      title="Elixir" # " is " # "the bees" # " " # "knees",
+      author="Jose " # "Valim",
+      year={1985},
+      institution={MASSACHUSETTS INST OF TECH CAMBRIDGE ARTIFICIAL INTELLIGENCE LAB}
+    }
+    """
+
+    result = %{
+      label: 'DBLP:conf/cbse/RusselloMD08',
+      tags: [
+        title: 'Elixir is the bees knees',
+        author: 'Jose Valim',
+        year: '1985',
+        institution: 'MASSACHUSETTS INST OF TECH CAMBRIDGE ARTIFICIAL INTELLIGENCE LAB'
+      ],
+      type: 'techreport'
+    }
+
+    {:ok, ^result, _} = Parser.parse_entry(input)
+  end
+
   test "File with comments and multiple entires" do
     file = """
     %  a sample bibliography file

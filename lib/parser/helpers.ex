@@ -44,6 +44,6 @@ defmodule BibTex.Parser.Helpers do
   Parses one valid symbol. This is defined in terms of which symbols are valid in a bibtex file.
   """
   def symbol do
-    ascii_char([?A..?Z, ?a..?z, ?., ?0..?9, ?,])
+    ascii_char([?A..?Z, ?a..?z, ?., ?0..?9, ?,, ?:, ?/])
   end
 end

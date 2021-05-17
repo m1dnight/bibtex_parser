@@ -1,5 +1,5 @@
 %{
-  "earmark": {:hex, :earmark, "1.2.5", "4d21980d5d2862a2e13ec3c49ad9ad783ffc7ca5769cf6ff891a4553fbaae761", [:mix], [], "hexpm"},
-  "ex_doc": {:hex, :ex_doc, "0.18.4", "4406b8891cecf1352f49975c6d554e62e4341ceb41b9338949077b0d4a97b949", [:mix], [{:earmark, "~> 1.1", [hex: :earmark, repo: "hexpm", optional: false]}], "hexpm"},
-  "nimble_parsec": {:hex, :nimble_parsec, "0.3.2", "6d3373c04fdef6c880bc6cd0ea6cfe8f1e9b962a8baab7063ef193aede1b5d54", [:mix], [], "hexpm"},
+  "earmark": {:hex, :earmark, "1.2.5", "4d21980d5d2862a2e13ec3c49ad9ad783ffc7ca5769cf6ff891a4553fbaae761", [:mix], [], "hexpm", "c57508ddad47dfb8038ca6de1e616e66e9b87313220ac5d9817bc4a4dc2257b9"},
+  "ex_doc": {:hex, :ex_doc, "0.18.4", "4406b8891cecf1352f49975c6d554e62e4341ceb41b9338949077b0d4a97b949", [:mix], [{:earmark, "~> 1.1", [hex: :earmark, repo: "hexpm", optional: false]}], "hexpm", "9dbe1ce1d711dc5362e3b3280e92989ad61413ce423bc4e9f76d5fcc51ab8d6b"},
+  "nimble_parsec": {:hex, :nimble_parsec, "0.3.2", "6d3373c04fdef6c880bc6cd0ea6cfe8f1e9b962a8baab7063ef193aede1b5d54", [:mix], [], "hexpm", "0ccc59a6c5be1e0db1f8f49b098da528765ce01d0b80d8a38c64ab35c99fed41"},
 }
