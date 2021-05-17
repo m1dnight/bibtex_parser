@@ -37,6 +37,6 @@ defmodule BibtexParser.MixProject do
 
   # Run "mix help deps" to learn about dependencies.
   def deps do
-    [{:nimble_parsec, "~> 0.2"}, {:ex_doc, ">= 0.0.0", only: :dev}]
+    [{:nimble_parsec, "~> 1.1.0"}, {:ex_doc, ">= 0.0.0", only: :dev}]
   end
 end

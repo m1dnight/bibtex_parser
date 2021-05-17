@@ -12,9 +12,9 @@ defmodule BibTex.Parser do
   comment =
     whitespaces()
     |> concat(ascii_char([?%]))
-    |> repeat_until(
-      utf8_char([]),
-      [ascii_char([?\n])]
+    |> repeat(
+      lookahead_not(ascii_char([?\n]))
+      |> utf8_char([])
     )
     |> ignore()
 
@@ -41,9 +41,9 @@ defmodule BibTex.Parser do
     whitespaces()
     |> concat(ignore_optional_char(?,))
     |> concat(symbol())
-    |> repeat_until(
-      symbol(),
-      [ascii_char([?=])]
+    |> repeat(
+      lookahead_not(ascii_char([?=]))
+      |> ascii_char([?A..?Z, ?a..?z, ?., ?0..?9, ?,, ?:, ?/])
     )
     |> concat(whitespaces())
     |> concat(ignore_optional_char(?,))
@@ -61,9 +61,9 @@ defmodule BibTex.Parser do
     whitespaces()
     |> concat(ignore_required_char(?"))
     |> ascii_char([])
-    |> repeat_until(
-      ascii_char([]),
-      [ascii_char([?"])]
+    |> repeat(
+      lookahead_not(ascii_char([?"]))
+      |> ascii_char([])
     )
     |> concat(whitespaces())
     |> concat(ignore_optional_char(?"))
@@ -75,11 +75,18 @@ defmodule BibTex.Parser do
     debug: false
   )
 
+  trimmable =
+    choice([
+      replace(ascii_char([?\n]), ?\s),
+      ascii_char([?\ ]) |> concat(whitespaces()),
+      ascii_char([])
+    ])
+
   number_value =
     whitespaces()
-    |> repeat_until(
-      ascii_char([?0..?9]),
-      [ascii_char([{:not, ?0..?9}])]
+    |> repeat(
+      lookahead_not(ascii_char([{:not, ?0..?9}]))
+      |> ascii_char([?0..?9])
     )
     |> concat(whitespaces())
     |> concat(ignore_optional_char(?,))
@@ -87,18 +94,18 @@ defmodule BibTex.Parser do
 
   braced_text =
     ascii_char([?{])
-    |> repeat_until(
-      ascii_char([]),
-      [ascii_char([?}])]
+    |> repeat(
+      lookahead_not(ascii_char([?}]))
+      |> ascii_char([])
     )
     |> ascii_char([?}])
 
   braced =
     whitespaces()
     |> concat(ignore_required_char(?{))
-    |> repeat_until(
-      choice([braced_text, ascii_char([])]),
-      [ascii_char([?}])]
+    |> repeat(
+      lookahead_not(ascii_char([?}]))
+      |> choice([braced_text, trimmable])
     )
     |> concat(whitespaces())
     |> concat(ignore_required_char(?}))
@@ -124,9 +131,9 @@ defmodule BibTex.Parser do
     |> concat(ignore_required_char(?@))
     |> concat(whitespaces())
     |> ascii_char([])
-    |> repeat_until(
-      symbol(),
-      [ascii_char([?{])]
+    |> repeat(
+      lookahead_not(ascii_char([?{]))
+      |> ascii_char([?A..?Z, ?a..?z, ?., ?0..?9, ?,, ?:, ?/])
     )
     |> concat(whitespaces())
 
@@ -140,9 +147,9 @@ defmodule BibTex.Parser do
     ignore_required_char(?{)
     |> concat(whitespaces())
     |> concat(symbol())
-    |> repeat_until(
-      symbol(),
-      [ascii_char([?,]), ascii_char([?\s])]
+    |> repeat(
+      lookahead_not(choice([ascii_char([?,]), ascii_char([?\s])]))
+      |> ascii_char([?A..?Z, ?a..?z, ?., ?0..?9, ?,, ?:, ?/])
     )
     |> concat(whitespaces())
     |> concat(ignore_optional_char(?,))

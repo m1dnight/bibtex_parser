@@ -205,7 +205,7 @@ defmodule BibTex.Test.Entries do
     {:ok, ^result, _} = Parser.parse_entry(input)
   end
 
-  test "Entry Test 8: Braces in title" do
+  test "Entry Test 9: Braces in title" do
     input = """
     @techreport{foo,
     title     = "{{{This}}} is stupid",
@@ -215,7 +215,45 @@ defmodule BibTex.Test.Entries do
     result = %{
       label: 'foo',
       tags: [
-        title: '{ESCAPE:} {A} Component-Based Policy Framework for Sense and React Applications'
+        title: '{{{This}}} is stupid'
+      ],
+      type: 'techreport'
+    }
+
+    {:ok, ^result, _} = Parser.parse_entry(input)
+  end
+
+  test "Entry Test 10: newlines ignored" do
+    input = """
+    @techreport{foo,
+    title     = {This is a
+    multiline
+    title},
+    }
+    """
+
+    result = %{
+      label: 'foo',
+      tags: [
+        title: 'This is a multiline title'
+      ],
+      type: 'techreport'
+    }
+
+    {:ok, ^result, _} = Parser.parse_entry(input)
+  end
+
+  test "Entry Test 11: multiple spaces ignored" do
+    input = """
+    @techreport{foo,
+    title     = {A               title},
+    }
+    """
+
+    result = %{
+      label: 'foo',
+      tags: [
+        title: 'A title'
       ],
       type: 'techreport'
     }

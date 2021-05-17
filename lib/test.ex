@@ -6,7 +6,10 @@ defmodule T do
   s =
     whitespaces()
     |> concat(ignore_required_char(?"))
-    |> repeat_until(utf8_char([]), [ignore_required_char(?")])
+    |> repeat(
+      lookahead_not(ignore_required_char(?"))
+      |> utf8_char([])
+    )
     |> concat(ignore_required_char(?"))
     |> concat(whitespaces())
 

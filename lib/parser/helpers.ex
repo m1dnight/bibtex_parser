@@ -22,9 +22,18 @@ defmodule BibTex.Parser.Helpers do
   Eats up any whitespace at the beginning of the stream, including tabs etc.
   """
   def whitespaces do
-    repeat_until(
-      ascii_char([?\s, ?\t, ?\n, ?\r, ?\f, ?\v]),
-      [ascii_char([{:not, ?\s}, {:not, ?\t}, {:not, ?\n}, {:not, ?\r}, {:not, ?\f}, {:not, ?\v}])]
+    repeat(
+      lookahead_not(
+        ascii_char([
+          {:not, ?\s},
+          {:not, ?\t},
+          {:not, ?\n},
+          {:not, ?\r},
+          {:not, ?\f},
+          {:not, ?\v}
+        ])
+      )
+      |> ascii_char([?\s, ?\t, ?\n, ?\r, ?\f, ?\v])
     )
     |> ignore()
   end
@@ -33,9 +42,9 @@ defmodule BibTex.Parser.Helpers do
   Eats up any consecutive newlines.
   """
   def newlines do
-    repeat_until(
-      ascii_char([?\n]),
-      [ascii_char([{:not, ?\n}])]
+    repeat(
+      lookahead_not(ascii_char([{:not, ?\n}]))
+      |> ascii_char([?\n])
     )
     |> ignore()
   end
