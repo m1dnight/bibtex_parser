@@ -1,4 +1,4 @@
-defmodule BibTex.Parser.Helpers do
+defmodule BibtexParser.Parser.Helpers do
   import NimbleParsec
 
   @doc """

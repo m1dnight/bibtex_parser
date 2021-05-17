@@ -1,7 +1,7 @@
-defmodule BibTex.Test.Tag do
+defmodule BibtexParser.Test.Tag do
   use ExUnit.Case
   doctest BibtexParser
-  alias BibTex.Parser
+  alias BibtexParser.Parser
 
   test "Tag Test 1" do
     input = ~s(foobar = "baz")

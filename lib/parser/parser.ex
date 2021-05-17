@@ -1,6 +1,6 @@
-defmodule BibTex.Parser do
+defmodule BibtexParser.Parser do
   import NimbleParsec
-  import BibTex.Parser.Helpers
+  import BibtexParser.Parser.Helpers
   require Logger
 
   # ------------------------------------ Components ----------------------------#

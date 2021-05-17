@@ -1,6 +1,6 @@
 defmodule T do
   import NimbleParsec
-  import BibTex.Parser.Helpers
+  import BibtexParser.Parser.Helpers
   require Logger
 
   s =

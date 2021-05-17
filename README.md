@@ -1,12 +1,12 @@
 # Bibtex Parser
 
-A parser for BibTex files, implemented using NimbleParsec. Currently work in progress. Missing features are shown below.
+A parser for Bibtex files, implemented using NimbleParsec. Currently work in progress. Missing features are shown below.
 
 ## Example
 
 ```
 defmodule BibtexParser do
-  import BibTex.Parser
+  import BibtexParser.Parser
 
   def example do
     input = """
@@ -39,7 +39,7 @@ end
 
 ## Missing features
 
- - Can not parse full BibTex files. 
+ - Can not parse full Bibtex files. 
    - No support for `@STRING`, `@PREAMBLE`, or `@COMMENT`.
  - ~~String concatenation (e.g., `author = "Jose" # "Valim"`) not supported yet.~~
  - Documentation

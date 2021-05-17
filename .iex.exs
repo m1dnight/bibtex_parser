@@ -1,4 +1,4 @@
-import BibTex.Parser
+import BibtexParser.Parser
 
 ex1 = """
 @misc{ Nobody06,
@@ -86,7 +86,6 @@ test = """
 x y z
 """
 
-
 ex5 = """
 @incollection{spidersjs2,
     title={Parallel and Distributed Web Programming with Actors},
@@ -120,3 +119,19 @@ ex5 = """
     bibsource = {dblp computer science bibliography, https://dblp.org}
 }
 """
+
+test = fn ->
+  result = %{
+    label: 'Nobody06',
+    tags: [
+      author: 'Nobody Jr',
+      title: 'My Article',
+      year: '2006',
+      pages: '1--10'
+    ],
+    type: 'misc'
+  }
+
+  str = BibtexParser.Writer.to_string(result)
+  str
+end

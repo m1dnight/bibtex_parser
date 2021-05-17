@@ -1,7 +1,7 @@
-defmodule BibTex.Test.Entries do
+defmodule BibtexParser.Test.Entries do
   use ExUnit.Case
   doctest BibtexParser
-  alias BibTex.Parser
+  alias BibtexParser.Parser
 
   @tag :f
   test "Entry Test 0" do

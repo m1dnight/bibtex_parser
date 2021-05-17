@@ -15,7 +15,7 @@ defmodule BibtexParser.MixProject do
 
   defp description do
     """
-    Library for parsing BibTex files using NimbleParsec.
+    Library for parsing Bibtex files using NimbleParsec.
     """
   end
 

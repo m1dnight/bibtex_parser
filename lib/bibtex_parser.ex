@@ -1,29 +1,17 @@
 defmodule BibtexParser do
-  import BibTex.Parser
+  import BibtexParser.Parser
 
-  def example do
-    input = """
-    @techreport{agha1985actors,
-    title={Actors: A model of concurrent computation in distributed systems.},
-    author={Agha, Gul A},
-    year={1985},
-    institution={MASSACHUSETTS INST OF TECH CAMBRIDGE ARTIFICIAL INTELLIGENCE LAB}
-    }
+  def parse_file(path) do
+    {entries, _} =
+      File.read!(path)
+      |> BibtexParser.Parser.parse_entries()
 
-    """
+    entries
+  end
 
-    _result = parse_entry(input)
+  def check_file(path) do
+    content = parse_file(path)
 
-    # => {:ok,
-    #  %{
-    #    label: 'agha1985actors',
-    #    tags: [
-    #      title: 'Actors: A model of concurrent computation in distributed systems.',
-    #      author: 'Agha, Gul A',
-    #      year: '1985',
-    #      institution: 'MASSACHUSETTS INST OF TECH CAMBRIDGE ARTIFICIAL INTELLIGENCE LAB'
-    #    ],
-    #    type: 'techreport'
-    #  }}
+    BibtexParser.Checker.check(content)
   end
 end
