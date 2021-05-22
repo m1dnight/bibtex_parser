@@ -346,15 +346,15 @@ defmodule BibtexParser.AST do
 
   field_comma =
     parsec(:field)
+    |> parsec(:whitespaces)
     |> ignore(ascii_char([?,]))
+    |> parsec(:whitespaces)
 
   defparsec(:field_comma, field_comma)
 
   fields =
-    repeat(
-      lookahead(parsec(:field))
-      |> parsec(:field_comma)
-    )
+    repeat(parsec(:field_comma))
+    |> optional(parsec(:field))
 
   defparsec(:fields, fields)
 
