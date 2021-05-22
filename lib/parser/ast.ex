@@ -5,6 +5,9 @@ defmodule AST.BracedString, do: defstruct(content: [])
 defmodule AST.PlainText, do: defstruct(content: [])
 defmodule AST.Key, do: defstruct(content: [])
 defmodule AST.Field, do: defstruct(key: nil, value: nil)
+defmodule AST.Entry, do: defstruct(label: nil, type: nil, fields: nil)
+defmodule AST.EntryType, do: defstruct(content: nil)
+defmodule AST.InternalKey, do: defstruct(content: nil)
 
 defmodule BibtexParser.AST do
   import NimbleParsec
@@ -149,6 +152,44 @@ defmodule BibtexParser.AST do
     {[token], context}
   end
 
+  defp tokenify(rest, args, context, line, offset, :entry_type) do
+    debug_print("""
+    ===============================================
+    Type:    :entry_type
+    Rest:    #{inspect(rest)}
+    Args:    #{inspect(args)}
+    Context: #{inspect(context)}
+    Line:    #{inspect(line)}
+    Offset: #{inspect(offset)}
+    ===============================================
+    """)
+
+    chars = Enum.reverse(args)
+    string = to_string(chars)
+    token = %AST.EntryType{content: string}
+
+    {[token], context}
+  end
+
+  defp tokenify(rest, args, context, line, offset, :internal_key) do
+    debug_print("""
+    ===============================================
+    Type:    :internal_key
+    Rest:    #{inspect(rest)}
+    Args:    #{inspect(args)}
+    Context: #{inspect(context)}
+    Line:    #{inspect(line)}
+    Offset: #{inspect(offset)}
+    ===============================================
+    """)
+
+    chars = Enum.reverse(args)
+    string = to_string(chars)
+    token = %AST.InternalKey{content: string}
+
+    {[token], context}
+  end
+
   #############################################################################
   # Helper Parsers
 
@@ -247,9 +288,7 @@ defmodule BibtexParser.AST do
   #############################################################################
   # A Value (left hand side of an entry).
 
-  value =
-    choice([parsec(:braced_string), parsec(:quoted_string), parsec(:number)])
-    |> eos()
+  value = choice([parsec(:braced_string), parsec(:quoted_string), parsec(:number)])
 
   defparsec(:value, value)
 
@@ -277,4 +316,62 @@ defmodule BibtexParser.AST do
     |> post_traverse({:tokenify, [:field]})
 
   defparsec(:field, field)
+
+  #############################################################################
+  # Entry Type
+
+  entry_type =
+    repeat(
+      lookahead_not(ascii_char([?\{]))
+      |> ascii_char([])
+    )
+    |> post_traverse({:tokenify, [:entry_type]})
+
+  defparsec(:entry_type, entry_type)
+
+  #############################################################################
+  # Internal Key
+
+  internal_key =
+    repeat(
+      lookahead(ascii_char([?a..?z, ?A..?Z]))
+      |> ascii_char([?a..?z, ?A..?Z])
+    )
+    |> post_traverse({:tokenify, [:internal_key]})
+
+  defparsec(:internal_key, internal_key)
+
+  #############################################################################
+  # Entry
+
+  field_comma =
+    parsec(:field)
+    |> ignore(ascii_char([?,]))
+
+  defparsec(:field_comma, field_comma)
+
+  fields =
+    repeat(
+      lookahead(parsec(:field))
+      |> parsec(:field_comma)
+    )
+
+  defparsec(:fields, fields)
+
+  entry =
+    ignore(ascii_char([?@]))
+    |> parsec(:entry_type)
+    |> parsec(:whitespaces)
+    |> ignore(ascii_char([?\{]))
+    |> parsec(:internal_key)
+    |> parsec(:whitespaces)
+    |> ignore(ascii_char([?,]))
+    |> parsec(:whitespaces)
+    |> repeat(
+      lookahead(parsec(:field))
+      |> parsec(:field)
+    )
+    |> ignore(ascii_char([?\}]))
+
+  defparsec(:entry, entry)
 end

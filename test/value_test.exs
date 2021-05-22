@@ -3,6 +3,19 @@ defmodule BibtexParser.Test.Values do
   doctest BibtexParser
 
   #############################################################################
+  # Should fail.
+
+  test "Do not eat stray commas." do
+    input = ~s("quoted string",)
+
+    {:ok, ast, ",", _, _, _} = BibtexParser.AST.value(input)
+
+    expected = [%AST.QuotedString{content: [%AST.PlainText{content: "quoted string"}]}]
+
+    assert expected == ast
+  end
+
+  #############################################################################
   # Latex commands.
 
   test "Latex command" do
@@ -52,12 +65,14 @@ defmodule BibtexParser.Test.Values do
     assert expected == ast
   end
 
-  test "Quoted string in quoted string" do
+  test "Quoted string in quoted string does not work." do
     input = ~s("foo "bar" baz")
 
-    result = BibtexParser.AST.value(input)
+    {:ok, ast, _, _, _, _} = BibtexParser.AST.value(input)
 
-    assert {:error, _, _, _, _, _} = result
+    expected = [%AST.QuotedString{content: [%AST.PlainText{content: "foo "}]}]
+
+    assert expected == ast
   end
 
   #############################################################################

@@ -1,4 +1,4 @@
-defmodule BibtexParser.Test.Entry do
+defmodule BibtexParser.Test.Field do
   use ExUnit.Case
   doctest BibtexParser
 
