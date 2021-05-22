@@ -394,4 +394,13 @@ defmodule BibtexParser.AST do
     |> post_traverse({:tokenify, [:entry]})
 
   defparsec(:entry, entry)
+
+  #############################################################################
+  # Multiple entries
+
+  entries =
+    repeat(parsec(:entry) |> parsec(:whitespaces))
+    |> eos()
+
+  defparsec(:entries, entries)
 end

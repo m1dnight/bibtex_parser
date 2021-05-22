@@ -5,7 +5,7 @@ defmodule BibtexParser.Test.Entries do
   test "Simple Entries" do
     input = "@book{foo, year = 1234} @notabook{foo, year = 1234}"
 
-    {:ok, ast, _, _, _, _} = BibtexParser.AST.entry(input)
+    {:ok, ast, _, _, _, _} = BibtexParser.AST.entries(input)
 
     expected = [
       %AST.Entry{
