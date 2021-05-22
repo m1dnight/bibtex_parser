@@ -16,8 +16,7 @@ defmodule BibtexParser.AST do
   #############################################################################
   # Helpers
 
-  defp debug_print(m), do: if(true, do: IO.puts(m))
-
+  defp debug_print(m), do: if(false, do: IO.puts(m))
   #############################################################################
   # Transformation from tokens to structs.
 

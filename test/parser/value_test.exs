@@ -145,7 +145,13 @@ defmodule BibtexParser.Test.Values do
 
     {:ok, ast, _, _, _, _} = BibtexParser.AST.value(input)
 
-    expected = [%AST.PlainText{content: "Giovanni Russello and Leonardo Mostarda and Naranker Dulay"}]
+    expected = [
+      %AST.BracedString{
+        content: [
+          %AST.PlainText{content: "Giovanni Russello and\n    Leonardo Mostarda and\n    Naranker Dulay"}
+        ]
+      }
+    ]
 
     assert expected == ast
   end

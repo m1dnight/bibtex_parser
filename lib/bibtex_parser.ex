@@ -8,39 +8,39 @@ defmodule BibtexParser do
       [%{label: "foo", tags: [title: "Bar"], type: "incollection"}]
 
   """
-  def parse_string(str) do
-    {entries, _} = BibtexParser.Parser.parse_entries(str)
+  # def parse_string(str) do
+  #   {entries, _} = BibtexParser.Parser.parse_entries(str)
 
-    entries
-  end
+  #   entries
+  # end
 
-  @doc """
-  Given a string containing bibtex content, parses the string and then runs checks on it to verify if the content is proper bibtex.
-  These checks can be both structural (e.g., empty fields) and semantic (e.g. required fields).
+  # @doc """
+  # Given a string containing bibtex content, parses the string and then runs checks on it to verify if the content is proper bibtex.
+  # These checks can be both structural (e.g., empty fields) and semantic (e.g. required fields).
 
-  Each error returned from the function is in the form of `{<label>, [<error>: message]}`.
+  # Each error returned from the function is in the form of `{<label>, [<error>: message]}`.
 
-  ## Examples
+  # ## Examples
 
-      iex(4)> BibtexParser.check_string("@incollection{foo, title={Bar}")
-      [{"foo", [missing_tags: ["author", "booktitle", "pages", "publisher", "year"]]}]
+  #     iex(4)> BibtexParser.check_string("@incollection{foo, title={Bar}")
+  #     [{"foo", [missing_tags: ["author", "booktitle", "pages", "publisher", "year"]]}]
 
-  """
-  def check_string(str) do
-    parse_string(str)
-    |> BibtexParser.Checker.check()
-  end
+  # """
+  # def check_string(str) do
+  #   parse_string(str)
+  #   |> BibtexParser.Checker.check()
+  # end
 
-  def parse_file(path) do
-    entries =
-      File.read!(path)
-      |> parse_string()
+  # def parse_file(path) do
+  #   entries =
+  #     File.read!(path)
+  #     |> parse_string()
 
-    entries
-  end
+  #   entries
+  # end
 
-  def check_file(path) do
-    parse_file(path)
-    |> BibtexParser.Checker.check()
-  end
+  # def check_file(path) do
+  #   parse_file(path)
+  #   |> BibtexParser.Checker.check()
+  # end
 end
