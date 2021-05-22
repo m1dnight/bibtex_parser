@@ -15,7 +15,7 @@ defmodule BibtexParser.AST do
   #############################################################################
   # Helpers
 
-  defp debug_print(m), do: if(true, do: IO.puts(m))
+  defp debug_print(m), do: if(false, do: IO.puts(m))
 
   #############################################################################
   # Transformation from tokens to structs.
@@ -341,7 +341,7 @@ defmodule BibtexParser.AST do
 
   entry_type =
     repeat(
-      lookahead_not(ascii_char([?\{]))
+      lookahead_not(ascii_char([?\{, ?\s, ?\t]))
       |> ascii_char([])
     )
     |> post_traverse({:tokenify, [:entry_type]})
@@ -385,11 +385,13 @@ defmodule BibtexParser.AST do
     |> parsec(:entry_type)
     |> parsec(:whitespaces)
     |> ignore(ascii_char([?\{]))
+    |> parsec(:whitespaces)
     |> parsec(:internal_key)
     |> parsec(:whitespaces)
     |> ignore(ascii_char([?,]))
     |> parsec(:whitespaces)
     |> parsec(:fields)
+    |> parsec(:whitespaces)
     |> ignore(ascii_char([?\}]))
     |> post_traverse({:tokenify, [:entry]})
 
@@ -399,7 +401,7 @@ defmodule BibtexParser.AST do
   # Multiple entries
 
   entries =
-    repeat(parsec(:entry) |> parsec(:whitespaces))
+    repeat(parsec(:whitespaces) |> parsec(:entry) |> parsec(:whitespaces))
     |> eos()
 
   defparsec(:entries, entries)
