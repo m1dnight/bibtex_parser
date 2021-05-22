@@ -23,7 +23,7 @@ defmodule BibtexParser.Test.Field do
     {:ok, ast, _, _, _, _} = BibtexParser.AST.field(input)
 
     expected = [
-      %AST.Field{key: %AST.Key{content: "year"}, value: [%AST.Number{content: 1999}]},
+      %AST.Field{key: %AST.Key{content: "year"}, value: [%AST.Number{content: 1999}]}
     ]
 
     assert expected == ast
