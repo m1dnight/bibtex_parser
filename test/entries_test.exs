@@ -9,14 +9,14 @@ defmodule BibtexParser.Test.Entries do
 
     expected = [
       %AST.Entry{
-        entry_type: "book",
+        entry_type: "notabook",
         fields: [
           %AST.Field{key: %AST.Key{content: "year"}, value: [%AST.Number{content: 1234}]}
         ],
         internal_key: "foo"
       },
       %AST.Entry{
-        entry_type: "notabook",
+        entry_type: "book",
         fields: [
           %AST.Field{key: %AST.Key{content: "year"}, value: [%AST.Number{content: 1234}]}
         ],

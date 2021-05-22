@@ -228,6 +228,23 @@ defmodule BibtexParser.AST do
     {[token], context}
   end
 
+  defp tokenify(rest, args, context, line, offset, :entries) do
+    debug_print("""
+    ===============================================
+    Type:    :entries
+    Rest:    #{inspect(rest)}
+    Args:    #{inspect(args)}
+    Context: #{inspect(context)}
+    Line:    #{inspect(line)}
+    Offset: #{inspect(offset)}
+    ===============================================
+    """)
+
+    entries = Enum.reverse(args)
+
+    {entries, context}
+  end
+
   #############################################################################
   # Helper Parsers
 
@@ -435,6 +452,7 @@ defmodule BibtexParser.AST do
   entries =
     repeat(parsec(:whitespaces) |> parsec(:entry) |> parsec(:whitespaces))
     |> eos()
+    |> post_traverse({:tokenify, [:entries]})
 
   defparsec(:entries, entries)
 end
