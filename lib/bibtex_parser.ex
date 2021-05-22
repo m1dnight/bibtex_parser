@@ -31,7 +31,6 @@ defmodule BibtexParser do
     |> BibtexParser.Checker.check()
   end
 
-
   def parse_file(path) do
     entries =
       File.read!(path)

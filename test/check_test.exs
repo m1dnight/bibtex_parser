@@ -1,81 +1,104 @@
-defmodule BibtexParser.Test.Checks do
+defmodule BibtexParser.Test.Values do
   use ExUnit.Case
   doctest BibtexParser
 
-  test "Valid entry" do
-    input = """
-    @incollection{spidersjs2,
-    title={Parallel and Distributed Web Programming with Actors},
-    author={Myter, Florian and Scholliers, Christophe and De Meuter, Wolfgang},
-    booktitle={Programming with Actors: State-of-the-Art and Research Perspectives},
-    pages={3--31},
-    year={2018},
-    publisher={Springer International Publishing}
-    }
-    """
+  #############################################################################
+  # Quoted Strings
 
-    errors = BibtexParser.check_string(input)
+  test "Quoted string" do
+    input = ~s("quoted")
 
-    assert errors == []
+    {:ok, ast, _, _, _, _} = BibtexParser.AST.value(input)
+
+    expected = [
+      %AST.QuotedString{
+        content: [
+          %AST.PlainText{content: "quoted"}
+        ]
+      }
+    ]
+
+    assert ast == expected
   end
 
-  test "Empty tag" do
-    input = """
-    @incollection{spidersjs2,
-    title={Parallel and Distributed Web Programming with Actors},
-    author={Myter, Florian and Scholliers, Christophe and De Meuter, Wolfgang},
-    booktitle={Programming with Actors: State-of-the-Art and Research Perspectives},
-    pages={3--31},
-    year={},
-    publisher={Springer International Publishing}
-    }
-    """
+  test "Number in quoted string" do
+    input = ~s("1234")
 
-    errors = BibtexParser.check_string(input)
+    {:ok, ast, _, _, _, _} = BibtexParser.AST.value(input)
 
-    assert errors == [{"spidersjs2", [empty_tags: [:year]]}]
+    expected = [%AST.QuotedString{content: [%AST.Number{content: 1234}]}]
+
+    assert ast == expected
   end
 
-  test "Abbreviated Titles" do
-    input = """
-    @article{tinydb,
-    author    = {Samuel Madden and
-            Michael J. Franklin and
-            Joseph M. Hellerstein and
-            Wei Hong},
-    title     = {TinyDB: an acquisitional query processing system for sensor networks},
-    journal   = {{ACM} Trans. Database Syst.},
-    volume    = {30},
-    number    = {1},
-    pages     = {122--173},
-    year      = {2005},
-    url       = {https://doi.org/10.1145/1061318.1061322},
-    doi       = {10.1145/1061318.1061322},
-    timestamp = {Wed, 14 Nov 2018 10:42:12 +0100},
-    biburl    = {https://dblp.org/rec/journals/tods/MaddenFHH05.bib},
-    bibsource = {dblp computer science bibliography, https://dblp.org}
-    }
+  test "Quoted string in quoted string" do
+    input = ~s("foo "bar" baz")
 
-    """
+    result = BibtexParser.AST.value(input)
 
-    errors = BibtexParser.check_string(input)
-
-    assert errors == [{"tinydb", [abbreviated_journal_title: "{ACM} Trans. Database Syst."]}]
+    assert {:error, _, _, _, _, _} = result
   end
 
-  test "Missing tags" do
-    input = """
-    @incollection{spidersjs2,
-    title={Parallel and Distributed Web Programming with Actors},
-    author={Myter, Florian and Scholliers, Christophe and De Meuter, Wolfgang},
-    booktitle={Programming with Actors: State-of-the-Art and Research Perspectives},
-    year={2018},
-    publisher={Springer International Publishing}
-    }
-    """
+  #############################################################################
+  # Braced Strings
 
-    errors = BibtexParser.check_string(input)
+  test "Braced string" do
+    input = ~s({braced})
 
-    assert errors == [{"spidersjs2", [missing_tags: ["pages"]]}]
+    {:ok, ast, _, _, _, _} = BibtexParser.AST.value(input)
+
+    expected = [
+      %AST.BracedString{
+        content: [
+          %AST.PlainText{content: "braced"}
+        ]
+      }
+    ]
+
+    assert ast == expected
+  end
+
+  test "Braced string in braced string" do
+    input = ~s({{a}{b}})
+
+    {:ok, ast, _, _, _, _} = BibtexParser.AST.value(input)
+
+    expected = [
+      %AST.BracedString{
+        content: [
+          %AST.BracedString{content: [%AST.PlainText{content: "a"}]},
+          %AST.BracedString{content: [%AST.PlainText{content: "b"}]}
+        ]
+      }
+    ]
+
+    assert ast == expected
+  end
+
+  #############################################################################
+  # Number
+
+  test "Number" do
+    input = ~s(1999)
+
+    {:ok, ast, _, _, _, _} = BibtexParser.AST.value(input)
+
+    expected = [
+      %AST.Number{
+        content: 1999
+      }
+    ]
+
+    assert ast == expected
+  end
+
+  test "Number in braced string" do
+    input = ~s({1999})
+
+    {:ok, ast, _, _, _, _} = BibtexParser.AST.value(input)
+
+    expected = [%AST.BracedString{content: [%AST.Number{content: 1999}]}]
+
+    assert ast == expected
   end
 end
