@@ -11,7 +11,7 @@ defmodule BibtexParser.Test.Entry do
       %AST.Entry{
         entry_type: "book",
         fields: [
-          %AST.Field{key: %AST.Key{content: "year"}, value: [%AST.Number{content: 1234}]}
+          %AST.Field{key: %AST.Key{value: "year"}, value: [%AST.Number{value: 1234}]}
         ],
         internal_key: "foo"
       }
@@ -41,7 +41,7 @@ defmodule BibtexParser.Test.Entry do
       %AST.Entry{
         entry_type: "book",
         fields: [
-          %AST.Field{key: %AST.Key{content: "year"}, value: [%AST.Number{content: 1234}]}
+          %AST.Field{key: %AST.Key{value: "year"}, value: [%AST.Number{value: 1234}]}
         ],
         internal_key: "foo"
       }
@@ -60,8 +60,8 @@ defmodule BibtexParser.Test.Entry do
         entry_type: "book",
         fields: [
           %AST.Field{
-            key: %AST.Key{content: "year"},
-            value: [%AST.BracedString{content: [%AST.Number{content: 1234}]}]
+            key: %AST.Key{value: "year"},
+            value: [%AST.BracedString{content: [%AST.Number{value: 1234}]}]
           }
         ],
         internal_key: "foo"
@@ -81,8 +81,8 @@ defmodule BibtexParser.Test.Entry do
         entry_type: "book",
         fields: [
           %AST.Field{
-            key: %AST.Key{content: "year"},
-            value: [%AST.QuotedString{content: [%AST.Number{content: 1234}]}]
+            key: %AST.Key{value: "year"},
+            value: [%AST.QuotedString{content: [%AST.Number{value: 1234}]}]
           }
         ],
         internal_key: "foo"
@@ -102,12 +102,12 @@ defmodule BibtexParser.Test.Entry do
         entry_type: "book",
         fields: [
           %AST.Field{
-            key: %AST.Key{content: "year"},
-            value: [%AST.QuotedString{content: [%AST.Number{content: 1234}]}]
+            key: %AST.Key{value: "year"},
+            value: [%AST.QuotedString{content: [%AST.Number{value: 1234}]}]
           },
           %AST.Field{
-            key: %AST.Key{content: "author"},
-            value: [%AST.BracedString{content: [%AST.PlainText{content: "The Author is This"}]}]
+            key: %AST.Key{value: "author"},
+            value: [%AST.BracedString{content: [%AST.PlainText{value: "The Author is This"}]}]
           }
         ],
         internal_key: "foo"
@@ -144,131 +144,130 @@ defmodule BibtexParser.Test.Entry do
         entry_type: "inproceedings",
         fields: [
           %AST.Field{
-            key: %AST.Key{content: "author"},
+            key: %AST.Key{value: "author"},
             value: [
               %AST.BracedString{
                 content: [
                   %AST.PlainText{
-                    content: "Giovanni Russello and Leonardo Mostarda and Naranker Dulay"
+                    value: "Giovanni Russello and Leonardo Mostarda and Naranker Dulay"
                   }
                 ]
               }
             ]
           },
           %AST.Field{
-            key: %AST.Key{content: "bibsource"},
+            key: %AST.Key{value: "bibsource"},
             value: [
               %AST.BracedString{
                 content: [
-                  %AST.PlainText{content: "dblp computer science bibliography, https://dblp.org"}
+                  %AST.PlainText{value: "dblp computer science bibliography, https://dblp.org"}
                 ]
               }
             ]
           },
           %AST.Field{
-            key: %AST.Key{content: "biburl"},
+            key: %AST.Key{value: "biburl"},
             value: [
               %AST.BracedString{
                 content: [
-                  %AST.PlainText{content: "https://dblp.org/rec/conf/cbse/RusselloMD08.bib"}
+                  %AST.PlainText{value: "https://dblp.org/rec/conf/cbse/RusselloMD08.bib"}
                 ]
               }
             ]
           },
           %AST.Field{
-            key: %AST.Key{content: "booktitle"},
+            key: %AST.Key{value: "booktitle"},
             value: [
               %AST.BracedString{
                 content: [
                   %AST.PlainText{
-                    content:
-                      "Component-Based Software Engineering, 11th International Symposium, "
+                    value: "Component-Based Software Engineering, 11th International Symposium, "
                   },
-                  %AST.BracedString{content: [%AST.PlainText{content: "CBSE"}]},
+                  %AST.BracedString{content: [%AST.PlainText{value: "CBSE"}]},
                   %AST.PlainText{
-                    content: " 2008, Karlsruhe, Germany, October 14-17, 2008. Proceedings"
+                    value: " 2008, Karlsruhe, Germany, October 14-17, 2008. Proceedings"
                   }
                 ]
               }
             ]
           },
           %AST.Field{
-            key: %AST.Key{content: "doi"},
+            key: %AST.Key{value: "doi"},
             value: [
               %AST.BracedString{
                 content: [
-                  %AST.Number{content: 10},
-                  %AST.PlainText{content: ".1007/978-3-540-87891-9_14"}
+                  %AST.Number{value: 10},
+                  %AST.PlainText{value: ".1007/978-3-540-87891-9_14"}
                 ]
               }
             ]
           },
           %AST.Field{
-            key: %AST.Key{content: "editor"},
+            key: %AST.Key{value: "editor"},
             value: [
               %AST.BracedString{
                 content: [
                   %AST.PlainText{
-                    content: "Michel R. V. Chaudron and Clemens A. Szyperski and Ralf H. Reussner"
+                    value: "Michel R. V. Chaudron and Clemens A. Szyperski and Ralf H. Reussner"
                   }
                 ]
               }
             ]
           },
           %AST.Field{
-            key: %AST.Key{content: "pages"},
+            key: %AST.Key{value: "pages"},
             value: [%AST.BracedString{content: [%AST.Range{from: 212, to: 229}]}]
           },
           %AST.Field{
-            key: %AST.Key{content: "publisher"},
-            value: [%AST.BracedString{content: [%AST.PlainText{content: "Springer"}]}]
+            key: %AST.Key{value: "publisher"},
+            value: [%AST.BracedString{content: [%AST.PlainText{value: "Springer"}]}]
           },
           %AST.Field{
-            key: %AST.Key{content: "series"},
+            key: %AST.Key{value: "series"},
             value: [
               %AST.BracedString{
-                content: [%AST.PlainText{content: "Lecture Notes in Computer Science"}]
+                content: [%AST.PlainText{value: "Lecture Notes in Computer Science"}]
               }
             ]
           },
           %AST.Field{
-            key: %AST.Key{content: "timestamp"},
+            key: %AST.Key{value: "timestamp"},
             value: [
               %AST.BracedString{
-                content: [%AST.PlainText{content: "Tue, 14 May 2019 10:00:47 +0200"}]
+                content: [%AST.PlainText{value: "Tue, 14 May 2019 10:00:47 +0200"}]
               }
             ]
           },
           %AST.Field{
-            key: %AST.Key{content: "title"},
+            key: %AST.Key{value: "title"},
             value: [
               %AST.BracedString{
                 content: [
-                  %AST.BracedString{content: [%AST.PlainText{content: "ESCAPE:"}]},
-                  %AST.PlainText{content: " "},
-                  %AST.BracedString{content: [%AST.PlainText{content: "A"}]},
+                  %AST.BracedString{content: [%AST.PlainText{value: "ESCAPE:"}]},
+                  %AST.PlainText{value: " "},
+                  %AST.BracedString{content: [%AST.PlainText{value: "A"}]},
                   %AST.PlainText{
-                    content: " Component-Based Policy Framework for Sense and React Applications"
+                    value: " Component-Based Policy Framework for Sense and React Applications"
                   }
                 ]
               }
             ]
           },
           %AST.Field{
-            key: %AST.Key{content: "url"},
+            key: %AST.Key{value: "url"},
             value: [
               %AST.BracedString{
-                content: [%AST.PlainText{content: "https://doi.org/10.1007/978-3-540-87891-9_14"}]
+                content: [%AST.PlainText{value: "https://doi.org/10.1007/978-3-540-87891-9_14"}]
               }
             ]
           },
           %AST.Field{
-            key: %AST.Key{content: "volume"},
-            value: [%AST.BracedString{content: [%AST.Number{content: 5282}]}]
+            key: %AST.Key{value: "volume"},
+            value: [%AST.BracedString{content: [%AST.Number{value: 5282}]}]
           },
           %AST.Field{
-            key: %AST.Key{content: "year"},
-            value: [%AST.BracedString{content: [%AST.Number{content: 2008}]}]
+            key: %AST.Key{value: "year"},
+            value: [%AST.BracedString{content: [%AST.Number{value: 2008}]}]
           }
         ],
         internal_key: "DBLP:conf/cbse/RusselloMD08"

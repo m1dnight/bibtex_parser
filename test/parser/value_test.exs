@@ -10,7 +10,7 @@ defmodule BibtexParser.Test.Values do
 
     {:ok, ast, ",", _, _, _} = BibtexParser.AST.value(input)
 
-    expected = [%AST.QuotedString{content: [%AST.PlainText{content: "quoted string"}]}]
+    expected = [%AST.QuotedString{content: [%AST.PlainText{value: "quoted string"}]}]
 
     assert expected == ast
   end
@@ -28,7 +28,7 @@ defmodule BibtexParser.Test.Values do
       %AST.QuotedString{
         content: [
           %AST.Command{content: "LaTeX"},
-          %AST.PlainText{content: " command"}
+          %AST.PlainText{value: " command"}
         ]
       }
     ]
@@ -47,7 +47,7 @@ defmodule BibtexParser.Test.Values do
     expected = [
       %AST.QuotedString{
         content: [
-          %AST.PlainText{content: "quoted"}
+          %AST.PlainText{value: "quoted"}
         ]
       }
     ]
@@ -60,7 +60,7 @@ defmodule BibtexParser.Test.Values do
 
     {:ok, ast, _, _, _, _} = BibtexParser.AST.value(input)
 
-    expected = [%AST.QuotedString{content: [%AST.Number{content: 1234}]}]
+    expected = [%AST.QuotedString{content: [%AST.Number{value: 1234}]}]
 
     assert expected == ast
   end
@@ -70,7 +70,7 @@ defmodule BibtexParser.Test.Values do
 
     {:ok, ast, _, _, _, _} = BibtexParser.AST.value(input)
 
-    expected = [%AST.QuotedString{content: [%AST.PlainText{content: "foo "}]}]
+    expected = [%AST.QuotedString{content: [%AST.PlainText{value: "foo "}]}]
 
     assert expected == ast
   end
@@ -86,7 +86,7 @@ defmodule BibtexParser.Test.Values do
     expected = [
       %AST.BracedString{
         content: [
-          %AST.PlainText{content: "braced"}
+          %AST.PlainText{value: "braced"}
         ]
       }
     ]
@@ -102,8 +102,8 @@ defmodule BibtexParser.Test.Values do
     expected = [
       %AST.BracedString{
         content: [
-          %AST.BracedString{content: [%AST.PlainText{content: "a"}]},
-          %AST.BracedString{content: [%AST.PlainText{content: "b"}]}
+          %AST.BracedString{content: [%AST.PlainText{value: "a"}]},
+          %AST.BracedString{content: [%AST.PlainText{value: "b"}]}
         ]
       }
     ]
@@ -121,7 +121,7 @@ defmodule BibtexParser.Test.Values do
 
     expected = [
       %AST.Number{
-        content: 1999
+        value: 1999
       }
     ]
 
@@ -133,7 +133,7 @@ defmodule BibtexParser.Test.Values do
 
     {:ok, ast, _, _, _, _} = BibtexParser.AST.value(input)
 
-    expected = [%AST.BracedString{content: [%AST.Number{content: 1999}]}]
+    expected = [%AST.BracedString{content: [%AST.Number{value: 1999}]}]
 
     assert expected == ast
   end
@@ -148,7 +148,7 @@ defmodule BibtexParser.Test.Values do
     expected = [
       %AST.BracedString{
         content: [
-          %AST.PlainText{content: "Giovanni Russello and\n    Leonardo Mostarda and\n    Naranker Dulay"}
+          %AST.PlainText{value: "Giovanni Russello and\n    Leonardo Mostarda and\n    Naranker Dulay"}
         ]
       }
     ]

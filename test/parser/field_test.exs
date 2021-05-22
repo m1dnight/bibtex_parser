@@ -9,8 +9,8 @@ defmodule BibtexParser.Test.Field do
 
     expected = [
       %AST.Field{
-        key: %AST.Key{content: "author"},
-        value: [%AST.QuotedString{content: [%AST.PlainText{content: "Foo Bar"}]}]
+        key: %AST.Key{value: "author"},
+        value: [%AST.QuotedString{content: [%AST.PlainText{value: "Foo Bar"}]}]
       }
     ]
 
@@ -23,7 +23,7 @@ defmodule BibtexParser.Test.Field do
     {:ok, ast, _, _, _, _} = BibtexParser.AST.field(input)
 
     expected = [
-      %AST.Field{key: %AST.Key{content: "year"}, value: [%AST.Number{content: 1999}]}
+      %AST.Field{key: %AST.Key{value: "year"}, value: [%AST.Number{value: 1999}]}
     ]
 
     assert expected == ast
@@ -35,8 +35,8 @@ defmodule BibtexParser.Test.Field do
     {:ok, ast, _, _, _, _} = BibtexParser.AST.fields(input)
 
     expected = [
-      %AST.Field{key: %AST.Key{content: "year"}, value: [%AST.Number{content: 1999}]},
-      %AST.Field{key: %AST.Key{content: "year"}, value: [%AST.Number{content: 2000}]}
+      %AST.Field{key: %AST.Key{value: "year"}, value: [%AST.Number{value: 1999}]},
+      %AST.Field{key: %AST.Key{value: "year"}, value: [%AST.Number{value: 2000}]}
     ]
 
     assert expected == ast
@@ -48,8 +48,8 @@ defmodule BibtexParser.Test.Field do
     {:ok, ast, _, _, _, _} = BibtexParser.AST.fields(input)
 
     expected = [
-      %AST.Field{key: %AST.Key{content: "year"}, value: [%AST.Number{content: 1999}]},
-      %AST.Field{key: %AST.Key{content: "year"}, value: [%AST.Number{content: 2000}]}
+      %AST.Field{key: %AST.Key{value: "year"}, value: [%AST.Number{value: 1999}]},
+      %AST.Field{key: %AST.Key{value: "year"}, value: [%AST.Number{value: 2000}]}
     ]
 
     assert expected == ast
@@ -61,8 +61,8 @@ defmodule BibtexParser.Test.Field do
     {:ok, ast, _, _, _, _} = BibtexParser.AST.fields(input)
 
     expected = [
-      %AST.Field{key: %AST.Key{content: "year"}, value: [%AST.Number{content: 1999}]},
-      %AST.Field{key: %AST.Key{content: "year"}, value: [%AST.Number{content: 2000}]}
+      %AST.Field{key: %AST.Key{value: "year"}, value: [%AST.Number{value: 1999}]},
+      %AST.Field{key: %AST.Key{value: "year"}, value: [%AST.Number{value: 2000}]}
     ]
 
     assert expected == ast

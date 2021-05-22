@@ -3,20 +3,32 @@ defmodule BibtexParser.Test.Write do
   doctest BibtexParser
 
   test "Write simple entry" do
-    input = %AST.Entry{
-      entry_type: "notabook",
-      fields: [
-        %AST.Field{key: %AST.Key{content: "year"}, value: [%AST.Number{content: 1234}]}
-      ],
-      internal_key: "foo"
-    }
+    config = %BibtexParser.Writer.Config{}
 
-    expected = """
-    @notabook{foo,
-        foo=bar
+    input = """
+    @incollection{spidersjs2,
+      title={Parallel and Distributed Web Programming with Actors},
+      author={Myter, Florian and Scholliers, Christophe and De Meuter, Wolfgang},
+      booktitle={Programming with Actors: State-of-the-Art and Research Perspectives},
+      pages={3--31},
+      year={2018},
+      publisher={Springer International Publishing}
     }
     """
-    output = BibtexParser.Writer.pretty_print(input)
+
+    expected = """
+    @incollection{spidersjs2,
+        title = {Parallel and Distributed Web Programming with Actors},
+        author = {Myter, Florian and Scholliers, Christophe and De Meuter, Wolfgang},
+        booktitle = {Programming with Actors: State-of-the-Art and Research Perspectives},
+        pages = {3--31},
+        year = {2018},
+        publisher = {Springer International Publishing}
+    }
+    """
+
+    {:ok, ast, _, _, _, _} = BibtexParser.AST.entries(input)
+    output = BibtexParser.Writer.pretty_print(ast, config)
 
     assert output == expected
   end

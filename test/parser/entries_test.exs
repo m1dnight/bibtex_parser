@@ -11,14 +11,14 @@ defmodule BibtexParser.Test.Entries do
       %AST.Entry{
         entry_type: "notabook",
         fields: [
-          %AST.Field{key: %AST.Key{content: "year"}, value: [%AST.Number{content: 1234}]}
+          %AST.Field{key: %AST.Key{value: "year"}, value: [%AST.Number{value: 1234}]}
         ],
         internal_key: "foo"
       },
       %AST.Entry{
         entry_type: "book",
         fields: [
-          %AST.Field{key: %AST.Key{content: "year"}, value: [%AST.Number{content: 1234}]}
+          %AST.Field{key: %AST.Key{value: "year"}, value: [%AST.Number{value: 1234}]}
         ],
         internal_key: "foo"
       }

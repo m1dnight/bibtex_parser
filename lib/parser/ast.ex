@@ -1,10 +1,10 @@
 defmodule AST.Command, do: defstruct(content: [])
-defmodule AST.Number, do: defstruct(content: [])
+defmodule AST.Number, do: defstruct(value: nil)
 defmodule AST.QuotedString, do: defstruct(content: [])
 defmodule AST.BracedString, do: defstruct(content: [])
-defmodule AST.PlainText, do: defstruct(content: [])
+defmodule AST.PlainText, do: defstruct(value: nil)
 defmodule AST.Range, do: defstruct(from: nil, to: nil)
-defmodule AST.Key, do: defstruct(content: [])
+defmodule AST.Key, do: defstruct(value: nil)
 defmodule AST.Field, do: defstruct(key: nil, value: nil)
 defmodule AST.Entry, do: defstruct(internal_key: nil, entry_type: nil, fields: nil)
 defmodule AST.EntryType, do: defstruct(content: nil)
@@ -57,7 +57,7 @@ defmodule BibtexParser.AST do
     chars = Enum.reverse(args)
     string = to_string(chars)
     number = String.to_integer(string)
-    token = %AST.Number{content: number}
+    token = %AST.Number{value: number}
     {[token], context}
   end
 
@@ -109,7 +109,7 @@ defmodule BibtexParser.AST do
 
     chars = Enum.reverse(args)
     string = to_string(chars)
-    token = %AST.PlainText{content: string}
+    token = %AST.PlainText{value: string}
 
     {[token], context}
   end
@@ -128,7 +128,7 @@ defmodule BibtexParser.AST do
 
     chars = Enum.reverse(args)
     string = to_string(chars)
-    token = %AST.Key{content: string}
+    token = %AST.Key{value: string}
 
     {[token], context}
   end
@@ -146,8 +146,8 @@ defmodule BibtexParser.AST do
     """)
 
     content = Enum.reverse(args)
-    [%AST.Key{content: k} | content] = content
-    token = %AST.Field{key: %AST.Key{content: k}, value: content}
+    [%AST.Key{value: k} | content] = content
+    token = %AST.Field{key: %AST.Key{value: k}, value: content}
 
     {[token], context}
   end
@@ -335,7 +335,6 @@ defmodule BibtexParser.AST do
     |> post_traverse({:tokenify, [:range]})
 
   defparsec(:page_range, page_range)
-
 
   #############################################################################
   # Content of a value.

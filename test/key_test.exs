@@ -9,7 +9,7 @@ defmodule BibtexParser.Test.Key do
 
     expected = [
       %AST.Key{
-        content: "author"
+        value: "author"
       }
     ]
 
@@ -23,7 +23,7 @@ defmodule BibtexParser.Test.Key do
 
     expected = [
       %AST.Key{
-        content: "AUTHOr"
+        value: "AUTHOr"
       }
     ]
 
