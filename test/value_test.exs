@@ -137,4 +137,16 @@ defmodule BibtexParser.Test.Values do
 
     assert expected == ast
   end
+
+  test "Value with newlines and many spaces" do
+    input = ~s({Giovanni Russello and
+    Leonardo Mostarda and
+    Naranker Dulay})
+
+    {:ok, ast, _, _, _, _} = BibtexParser.AST.value(input)
+
+    expected = [%AST.PlainText{content: "Giovanni Russello and Leonardo Mostarda and Naranker Dulay"}]
+
+    assert expected == ast
+  end
 end
