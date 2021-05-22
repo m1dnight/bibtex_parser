@@ -25,7 +25,6 @@ defmodule BibtexParser.Writer do
 
   @moduledoc false
 
-  @spec pretty_print(%Entry{:entry_type => any, :internal_key => any}, %Config{}) :: String.t()
   def pretty_print(%Entry{} = entry, config) do
     values = Enum.map(entry.fields, &pretty_print(&1, config)) |> Enum.join(",\n")
 
@@ -74,6 +73,10 @@ defmodule BibtexParser.Writer do
 
   def pretty_print(%PlainText{value: v}, _config) do
     "#{v}"
+  end
+
+  def pretty_print(%Command{value: v}, config) do
+
   end
 
   def pretty_print(%Range{from: f, to: t}, _config) do

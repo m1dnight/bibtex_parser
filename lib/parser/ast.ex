@@ -1,10 +1,13 @@
-defmodule AST.Command, do: defstruct(content: [])
+# Literals
 defmodule AST.Number, do: defstruct(value: nil)
+defmodule AST.PlainText, do: defstruct(value: nil)
+defmodule AST.Key, do: defstruct(value: nil)
+defmodule AST.Command, do: defstruct(value: [])
+defmodule AST.Range, do: defstruct(from: nil, to: nil)
+
+# CConstructors
 defmodule AST.QuotedString, do: defstruct(content: [])
 defmodule AST.BracedString, do: defstruct(content: [])
-defmodule AST.PlainText, do: defstruct(value: nil)
-defmodule AST.Range, do: defstruct(from: nil, to: nil)
-defmodule AST.Key, do: defstruct(value: nil)
 defmodule AST.Field, do: defstruct(key: nil, value: nil)
 defmodule AST.Entry, do: defstruct(internal_key: nil, entry_type: nil, fields: nil)
 defmodule AST.EntryType, do: defstruct(content: nil)
@@ -38,7 +41,7 @@ defmodule BibtexParser.AST do
 
     chars = Enum.reverse(args)
     string = to_string(chars)
-    token = %AST.Command{content: string}
+    token = %AST.Command{value: string}
     {[token], context}
   end
 

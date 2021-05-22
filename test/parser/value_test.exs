@@ -27,7 +27,7 @@ defmodule BibtexParser.Test.Values do
     expected = [
       %AST.QuotedString{
         content: [
-          %AST.Command{content: "LaTeX"},
+          %AST.Command{value: "LaTeX"},
           %AST.PlainText{value: " command"}
         ]
       }
