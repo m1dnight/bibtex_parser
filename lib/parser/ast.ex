@@ -3,6 +3,7 @@ defmodule AST.Number, do: defstruct(content: [])
 defmodule AST.QuotedString, do: defstruct(content: [])
 defmodule AST.BracedString, do: defstruct(content: [])
 defmodule AST.PlainText, do: defstruct(content: [])
+defmodule AST.Range, do: defstruct(from: nil, to: nil)
 defmodule AST.Key, do: defstruct(content: [])
 defmodule AST.Field, do: defstruct(key: nil, value: nil)
 defmodule AST.Entry, do: defstruct(internal_key: nil, entry_type: nil, fields: nil)
@@ -15,7 +16,7 @@ defmodule BibtexParser.AST do
   #############################################################################
   # Helpers
 
-  defp debug_print(m), do: if(false, do: IO.puts(m))
+  defp debug_print(m), do: if(true, do: IO.puts(m))
 
   #############################################################################
   # Transformation from tokens to structs.
@@ -209,6 +210,24 @@ defmodule BibtexParser.AST do
     {[token], context}
   end
 
+  defp tokenify(rest, args, context, line, offset, :range) do
+    debug_print("""
+    ===============================================
+    Type:    :range
+    Rest:    #{inspect(rest)}
+    Args:    #{inspect(args)}
+    Context: #{inspect(context)}
+    Line:    #{inspect(line)}
+    Offset: #{inspect(offset)}
+    ===============================================
+    """)
+
+    [from, to] = Enum.reverse(args)
+    token = %AST.Range{from: from, to: to}
+
+    {[token], context}
+  end
+
   #############################################################################
   # Helper Parsers
 
@@ -291,10 +310,23 @@ defmodule BibtexParser.AST do
   defparsec(:plain_text, plain_text)
 
   #############################################################################
+  # Page Range
+
+  page_range =
+    integer(min: 1)
+    |> ignore(string("--"))
+    |> integer(min: 1)
+    |> post_traverse({:tokenify, [:range]})
+
+  defparsec(:page_range, page_range)
+
+
+  #############################################################################
   # Content of a value.
 
   value_content =
     choice([
+      parsec(:page_range),
       parsec(:number),
       parsec(:quoted_string),
       parsec(:braced_string),
@@ -353,8 +385,8 @@ defmodule BibtexParser.AST do
 
   internal_key =
     repeat(
-      lookahead(ascii_char([?a..?z, ?A..?Z]))
-      |> ascii_char([?a..?z, ?A..?Z])
+      lookahead_not(ascii_char([?\s, ?,, ?\n, ?\t]))
+      |> ascii_char([])
     )
     |> post_traverse({:tokenify, [:internal_key]})
 
