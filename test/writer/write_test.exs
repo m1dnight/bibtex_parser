@@ -2,7 +2,7 @@ defmodule BibtexParser.Test.Write do
   use ExUnit.Case
   doctest BibtexParser
 
-  test "Simple Entries" do
+  test "Write simple entry" do
     input = %AST.Entry{
       entry_type: "notabook",
       fields: [
