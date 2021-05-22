@@ -5,7 +5,7 @@ defmodule AST.BracedString, do: defstruct(content: [])
 defmodule AST.PlainText, do: defstruct(content: [])
 defmodule AST.Key, do: defstruct(content: [])
 defmodule AST.Field, do: defstruct(key: nil, value: nil)
-defmodule AST.Entry, do: defstruct(label: nil, type: nil, fields: nil)
+defmodule AST.Entry, do: defstruct(internal_key: nil, entry_type: nil, fields: nil)
 defmodule AST.EntryType, do: defstruct(content: nil)
 defmodule AST.InternalKey, do: defstruct(content: nil)
 
@@ -190,6 +190,25 @@ defmodule BibtexParser.AST do
     {[token], context}
   end
 
+  defp tokenify(rest, args, context, line, offset, :entry) do
+    debug_print("""
+    ===============================================
+    Type:    :entry
+    Rest:    #{inspect(rest)}
+    Args:    #{inspect(args)}
+    Context: #{inspect(context)}
+    Line:    #{inspect(line)}
+    Offset: #{inspect(offset)}
+    ===============================================
+    """)
+
+    content = Enum.reverse(args)
+    [%AST.EntryType{content: et}, %AST.InternalKey{content: ik} | fields] = content
+    token = %AST.Entry{entry_type: et, internal_key: ik, fields: fields}
+
+    {[token], context}
+  end
+
   #############################################################################
   # Helper Parsers
 
@@ -342,7 +361,7 @@ defmodule BibtexParser.AST do
   defparsec(:internal_key, internal_key)
 
   #############################################################################
-  # Entry
+  # Multiple fields separated by a comma
 
   field_comma =
     parsec(:field)
@@ -358,6 +377,9 @@ defmodule BibtexParser.AST do
 
   defparsec(:fields, fields)
 
+  #############################################################################
+  # Entry
+
   entry =
     ignore(ascii_char([?@]))
     |> parsec(:entry_type)
@@ -367,11 +389,9 @@ defmodule BibtexParser.AST do
     |> parsec(:whitespaces)
     |> ignore(ascii_char([?,]))
     |> parsec(:whitespaces)
-    |> repeat(
-      lookahead(parsec(:field))
-      |> parsec(:field)
-    )
+    |> parsec(:fields)
     |> ignore(ascii_char([?\}]))
+    |> post_traverse({:tokenify, [:entry]})
 
   defparsec(:entry, entry)
 end
