@@ -3,16 +3,26 @@ defmodule AST.Number, do: defstruct(content: [])
 defmodule AST.QuotedString, do: defstruct(content: [])
 defmodule AST.BracedString, do: defstruct(content: [])
 defmodule AST.PlainText, do: defstruct(content: [])
+defmodule AST.Key, do: defstruct(content: [])
+defmodule AST.Field, do: defstruct(key: nil, value: nil)
 
 defmodule BibtexParser.AST do
   import NimbleParsec
+
+  #############################################################################
+  # Helpers
+
+  defp debug_print(m), do: if(true, do: IO.puts(m))
+
+  #############################################################################
+  # Transformation from tokens to structs.
 
   defp tokenify(_rest, [], _context, _line, _offset, _) do
     {:error, "No result."}
   end
 
   defp tokenify(rest, args, context, line, offset, :command) do
-    IO.puts("""
+    debug_print("""
     ===============================================
     Type:    :command
     Rest:    #{inspect(rest)}
@@ -30,7 +40,7 @@ defmodule BibtexParser.AST do
   end
 
   defp tokenify(rest, args, context, line, offset, :number) do
-    IO.puts("""
+    debug_print("""
     ===============================================
     Type:    :number
     Rest:    #{inspect(rest)}
@@ -49,7 +59,7 @@ defmodule BibtexParser.AST do
   end
 
   defp tokenify(rest, args, context, line, offset, :quoted_string) do
-    IO.puts("""
+    debug_print("""
     ===============================================
     Type:    :quoted_string
     Rest:    #{inspect(rest)}
@@ -66,7 +76,7 @@ defmodule BibtexParser.AST do
   end
 
   defp tokenify(rest, args, context, line, offset, :braced_string) do
-    IO.puts("""
+    debug_print("""
     ===============================================
     Type:    :braced_string
     Rest:    #{inspect(rest)}
@@ -83,7 +93,7 @@ defmodule BibtexParser.AST do
   end
 
   defp tokenify(rest, args, context, line, offset, :plain_text) do
-    IO.puts("""
+    debug_print("""
     ===============================================
     Type:    :plain_text
     Rest:    #{inspect(rest)}
@@ -101,14 +111,64 @@ defmodule BibtexParser.AST do
     {[token], context}
   end
 
+  defp tokenify(rest, args, context, line, offset, :key) do
+    debug_print("""
+    ===============================================
+    Type:    :key
+    Rest:    #{inspect(rest)}
+    Args:    #{inspect(args)}
+    Context: #{inspect(context)}
+    Line:    #{inspect(line)}
+    Offset: #{inspect(offset)}
+    ===============================================
+    """)
+
+    chars = Enum.reverse(args)
+    string = to_string(chars)
+    token = %AST.Key{content: string}
+
+    {[token], context}
+  end
+
+  defp tokenify(rest, args, context, line, offset, :field) do
+    debug_print("""
+    ===============================================
+    Type:    :field
+    Rest:    #{inspect(rest)}
+    Args:    #{inspect(args)}
+    Context: #{inspect(context)}
+    Line:    #{inspect(line)}
+    Offset: #{inspect(offset)}
+    ===============================================
+    """)
+
+    content = Enum.reverse(args)
+    [%AST.Key{content: k} | content] = content
+    token = %AST.Field{key: %AST.Key{content: k}, value: content}
+
+    {[token], context}
+  end
+
+  #############################################################################
+  # Helper Parsers
+
+  whitespaces =
+    repeat(
+      lookahead(ascii_char([?\s, ?\t, ?\n]))
+      |> ascii_char([?\s, ?\t, ?\n])
+    )
+    |> ignore()
+
+  defparsec(:whitespaces, whitespaces)
+
   #############################################################################
   # Latex Command
   # Example \LaTex or \leftbrace
 
   command =
-    string("\\")
+    ignore(string("\\"))
     |> repeat(
-      lookahead_not(ascii_char([?\s, ?\}]))
+      lookahead_not(ascii_char([?\s, ?\}, ?\"]))
       |> ascii_char([])
     )
     |> post_traverse({:tokenify, [:command]})
@@ -163,7 +223,7 @@ defmodule BibtexParser.AST do
 
   plain_text =
     repeat(
-      lookahead_not(utf8_char([?\", ?\{, ?\}]))
+      lookahead_not(utf8_char([?\", ?\{, ?\}, ?\\]))
       |> utf8_char([])
     )
     |> post_traverse({:tokenify, [:plain_text]})
@@ -174,7 +234,13 @@ defmodule BibtexParser.AST do
   # Content of a value.
 
   value_content =
-    choice([parsec(:number), parsec(:quoted_string), parsec(:braced_string), parsec(:plain_text)])
+    choice([
+      parsec(:number),
+      parsec(:quoted_string),
+      parsec(:braced_string),
+      parsec(:plain_text),
+      parsec(:command)
+    ])
 
   defparsec(:value_content, value_content)
 
@@ -186,4 +252,29 @@ defmodule BibtexParser.AST do
     |> eos()
 
   defparsec(:value, value)
+
+  #############################################################################
+  # Keys
+
+  key =
+    repeat(
+      lookahead(ascii_char([?a..?z, ?A..?Z]))
+      |> ascii_char([?a..?z, ?A..?Z])
+    )
+    |> post_traverse({:tokenify, [:key]})
+
+  defparsec(:key, key)
+
+  #############################################################################
+  # Fields
+
+  field =
+    parsec(:key)
+    |> parsec(:whitespaces)
+    |> ignore(ascii_char([?=]))
+    |> parsec(:whitespaces)
+    |> parsec(:value)
+    |> post_traverse({:tokenify, [:field]})
+
+  defparsec(:field, field)
 end

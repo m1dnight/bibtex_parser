@@ -3,6 +3,27 @@ defmodule BibtexParser.Test.Values do
   doctest BibtexParser
 
   #############################################################################
+  # Latex commands.
+
+  test "Latex command" do
+    # "\a"
+    input = ~s("\\LaTeX command")
+
+    {:ok, ast, _, _, _, _} = BibtexParser.AST.value(input)
+
+    expected = [
+      %AST.QuotedString{
+        content: [
+          %AST.Command{content: "LaTeX"},
+          %AST.PlainText{content: " command"}
+        ]
+      }
+    ]
+
+    assert expected == ast
+  end
+
+  #############################################################################
   # Quoted Strings
 
   test "Quoted string" do
@@ -18,7 +39,7 @@ defmodule BibtexParser.Test.Values do
       }
     ]
 
-    assert ast == expected
+    assert expected == ast
   end
 
   test "Number in quoted string" do
@@ -28,7 +49,7 @@ defmodule BibtexParser.Test.Values do
 
     expected = [%AST.QuotedString{content: [%AST.Number{content: 1234}]}]
 
-    assert ast == expected
+    assert expected == ast
   end
 
   test "Quoted string in quoted string" do
@@ -55,7 +76,7 @@ defmodule BibtexParser.Test.Values do
       }
     ]
 
-    assert ast == expected
+    assert expected == ast
   end
 
   test "Braced string in braced string" do
@@ -72,7 +93,7 @@ defmodule BibtexParser.Test.Values do
       }
     ]
 
-    assert ast == expected
+    assert expected == ast
   end
 
   #############################################################################
@@ -89,7 +110,7 @@ defmodule BibtexParser.Test.Values do
       }
     ]
 
-    assert ast == expected
+    assert expected == ast
   end
 
   test "Number in braced string" do
@@ -99,6 +120,6 @@ defmodule BibtexParser.Test.Values do
 
     expected = [%AST.BracedString{content: [%AST.Number{content: 1999}]}]
 
-    assert ast == expected
+    assert expected == ast
   end
 end
