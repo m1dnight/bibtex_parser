@@ -1,10 +1,11 @@
 defmodule BibtexParser do
   @doc """
-  Given a string containing bibtex content, returns a list of entries found in this string.
+  Given a string containing bibtex content, returns a list of entries found in
+  this string.
 
   ## Examples
 
-      iex>  BibtexParser.parse_string("@incollection{foo, title={Bar}")
+      iex> BibtexParser.parse_string("@incollection{foo, title={Bar}")
       [%{label: "foo", tags: [title: "Bar"], type: "incollection"}]
 
   """
@@ -15,14 +16,18 @@ defmodule BibtexParser do
   end
 
   @doc """
-  Given a string containing bibtex content, parses the string and then runs checks on it to verify if the content is proper bibtex.
-  These checks can be both structural (e.g., empty fields) and semantic (e.g. required fields).
+  Given a string containing bibtex content, parses the string and then runs
+  checks on it to verify if the content is proper Bibtex.
 
-  Each error returned from the function is in the form of `{<label>, [<error>: message]}`.
+  These checks can be both structural (e.g., empty fields) and semantic (e.g.
+  required fields).
+
+  Each error returned from the function is in the form of `{<label>, [<error>:
+  message]}`.
 
   ## Examples
 
-      iex(4)> BibtexParser.check_string("@incollection{foo, title={Bar}")
+      iex> BibtexParser.check_string("@incollection{foo, title={Bar}")
       [{"foo", [missing_tags: ["author", "booktitle", "pages", "publisher", "year"]]}]
 
   """
@@ -30,7 +35,6 @@ defmodule BibtexParser do
     parse_string(str)
     |> BibtexParser.Checker.check()
   end
-
 
   def parse_file(path) do
     entries =
