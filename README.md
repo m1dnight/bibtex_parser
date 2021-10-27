@@ -59,7 +59,7 @@ dependencies in `mix.exs`:
 ```elixir
 def deps do
   [
-    {:bibtex_parser, "~> 0.1.0"}
+    {:bibtex_parser, "~> 0.2.1"}
   ]
 end
 ```
