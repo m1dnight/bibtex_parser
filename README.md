@@ -53,7 +53,7 @@ end
 You can use `&Parser.parse_entries/1` to parse the contents of a file containing multiple BibTeX entries.
 Assume you have the following BibTeX file.
 
-```
+```elixir
 @incollection{spidersjs2,
     title={Parallel and Distributed Web Programming with Actors},
     author={Myter, Florian and Scholliers, Christophe and De Meuter, Wolfgang},
@@ -89,7 +89,7 @@ Assume you have the following BibTeX file.
 
 Parse it as follows.
 
-```
+```iex
 iex(1)> input = File.read!("test/large.bib") 
 iex(2)> {entries, rem} = BibtexParser.Parser.parse_entries(input)
 {[
